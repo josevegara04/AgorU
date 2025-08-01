@@ -1,0 +1,15 @@
+{
+  "name": "agoru",
+  "version": "1.0.0",
+  "description": "AgorU is web platform designed to help EAFIT students with their class selection and study resources throughout the semester, providing a clena and secure environmnet.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  }
+}
