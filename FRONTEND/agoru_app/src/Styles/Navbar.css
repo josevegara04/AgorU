@@ -1,0 +1,30 @@
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.fields{
+    display: flex;
+    width: 70%;
+    justify-content: end;
+}
+
+.fields a {
+    padding-left: 18px;
+}
+
+.fields button{
+    padding-left: 18px;
+    background: none;
+    border-color: transparent;
+    transition: ease-in 0.2s;
+}
+.fields button:hover{
+    border-color: aqua;
+}
