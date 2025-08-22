@@ -4,7 +4,7 @@ import "../Styles/Navbar.css"
 export default function Navbar() {
   return (
     <nav className="navbar">
-      <h1 className="app-name">AgorU</h1>
+      <img src="../public/images/logo.jpg" alt="" className="" />
       <div className="fields">
         <a href="#">
           Inicio

@@ -9,6 +9,9 @@
     top: 0;
     z-index: 10;
 }
+.navbar img{
+    height: 100px;
+}
 .fields{
     display: flex;
     width: 70%;
