@@ -1,4 +1,12 @@
 .register-window {
     display: flex;
+    flex-direction: column;
     background-color: aqua;
+    align-items: center;
+    padding: 10%;
+}
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

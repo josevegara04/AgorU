@@ -1,9 +1,11 @@
-import React from "react";
-import "../Styles/Navbar.css"
+// Componente de la barra principal
 
-export default function Navbar() {
-  async function login(){
-    const url = "http://localhost:3000"
+import React from "react";
+import "../Styles/Navbar.css";
+
+export default function Navbar({ onButtonClick, email }) {
+  async function login() {
+    const url = "http://localhost:3000";
     try {
       const response = await fetch(url);
       const data = await response.json();
@@ -17,18 +19,29 @@ export default function Navbar() {
     <nav className="navbar">
       <img src="../public/images/logo.jpg" alt="" className="" />
       <div className="fields">
-        <a href="#">
-          Inicio
-        </a>
-        <a href="#">
-          Materias
-        </a>
-        <a href="#">
-          Reseñas
-        </a>
-        <button onClick={login}>
-            Iniciar Sesión
-        </button>
+        <a href="#">Inicio</a>
+        <a href="#">Materias</a>
+        <a href="#">Reseñas</a>
+        {!email ? (
+          <>
+            <button onClick={() => onButtonClick("login")}>
+              Iniciar Sesión
+            </button>
+            <button onClick={() => onButtonClick("register")}>
+              Registrarse
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={() => {
+              localStorage.removeItem("token");
+              localStorage.removeItem("email");
+              window.location.reload();
+            }}
+          >
+            Cerrar Sesión
+          </button>
+        )}
       </div>
     </nav>
   );

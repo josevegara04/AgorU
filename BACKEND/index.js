@@ -1,7 +1,9 @@
 import express from "express";
 import registerRoutes from "./Routes/Register.js";
+import loginRoutes from "./Routes/Login.js";
 import dotenv from "dotenv";
 import cors from "cors";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -10,7 +12,27 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
+
+// Manejo de rutas
+app.use("/login", loginRoutes);
 app.use("/register", registerRoutes);
+
+// Middleware para autenticar el token enviado desde la petición
+export function authMiddleware(req, res, next) {
+  const authHeader = req.headers["authorization"]; 
+  if (!authHeader) return res.status(401).json({ message: "No token provided" });
+
+  const token = authHeader.split(" ")[1]; 
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY); 
+    req.user = decoded; 
+    next();
+  } catch (err) {
+    return res.status(403).json({ message: "Token inválido o expirado" });
+  }
+}
+
+// Endpoint por si no se reconoce ninguna ruta
 app.use((req, res) => {
   res.status(404).json({
     "success": "failed",
