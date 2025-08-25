@@ -6,7 +6,7 @@ import "../Styles/Navbar.css";
 export default function Navbar({ onButtonClick, email }) {
   return (
     <nav className="navbar">
-      <img src="../public/images/logo.jpg" alt="" className="" />
+      <img src="../public/images/logo.png" alt="" className="" />
       <div className="fields">
         <button onClick={() => onButtonClick("home")}> Inicio </button>
         <button onClick={() => onButtonClick("subjects")}> Materias </button>
