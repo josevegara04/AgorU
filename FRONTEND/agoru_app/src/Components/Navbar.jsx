@@ -10,7 +10,6 @@ export default function Navbar({ onButtonClick, email }) {
       <div className="fields">
         <button onClick={() => onButtonClick("home")}> Inicio </button>
         <button onClick={() => onButtonClick("subjects")}> Materias </button>
-        <a href="#">Reseñas</a>
         {!email ? (
           <>
             <button onClick={() => onButtonClick("login")}>
