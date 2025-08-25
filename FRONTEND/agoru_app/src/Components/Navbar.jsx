@@ -19,7 +19,7 @@ export default function Navbar({ onButtonClick, email }) {
     <nav className="navbar">
       <img src="../public/images/logo.jpg" alt="" className="" />
       <div className="fields">
-        <a href="#">Inicio</a>
+        <button onClick={() => onButtonClick("home")}> Inicio </button>
         <a href="#">Materias</a>
         <a href="#">Reseñas</a>
         {!email ? (
