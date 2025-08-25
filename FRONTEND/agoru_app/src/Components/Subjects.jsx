@@ -3,6 +3,8 @@
 import React from "react";
 import "../Styles/Subjects.css";
 import { useState } from "react";
+import Reviews from "./Reviews"
+import StudyMaterial from "./StudyMaterial";
 
 function Subjects({ email }) {
   const subjects = {
@@ -34,6 +36,7 @@ function Subjects({ email }) {
   const [selectedSubject, setSelectedSubject] = useState(
     subjects["Semestre 1"][0]
   );
+  const [resource, setResource] = useState("studyMaterial");
 
   return (
     <div className="subjects-container">
@@ -63,10 +66,10 @@ function Subjects({ email }) {
                       </li>
                       {subject === selectedSubject && (
                         <ul>
-                          <li onClick={() => console.log("Material de estudio")}>
+                          <li onClick={() => setResource("studyMaterial")}>
                             Material de estudio
                           </li>
-                          <li onClick={() => console.log("Reseñas")}>
+                          <li onClick={() => setResource("reviews")}>
                             Reseñas
                           </li>
                         </ul>
@@ -80,7 +83,8 @@ function Subjects({ email }) {
         </ul>
       </div>
       <div className="subject-content">
-        <h2>{selectedSubject}</h2>
+        <h1>{selectedSubject}</h1>
+        {resource === "studyMaterial" ? <StudyMaterial/>: <Reviews />}
       </div>
     </div>
   );
