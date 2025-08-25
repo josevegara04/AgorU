@@ -4,6 +4,7 @@ import Navbar from "./Components/Navbar";
 import Register from "./Components/Register"
 import Login from "./Components/Login";
 import Home from "./Components/Home";
+import Subjects from "./Components/Subjects";
 import { useState, useEffect } from "react";
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
         />
       )}
       {view === "home" && <Home email={userEmail}/>}
+      {view === "subjects" && <Subjects email={userEmail}/>}
     </>
   );
 }
