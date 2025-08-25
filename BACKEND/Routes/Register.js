@@ -30,10 +30,10 @@ router.post("/", checkUser, async (req, res) => {
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        await db.query("insert into user(email, password) values(?, ?)", [email, hashedPassword]);
+        const [result] = await db.query("insert into user(email, password) values(?, ?)", [email, hashedPassword]);
 
         // Crea el token
-        const token = jwt.sign({ email: result[0].email, id: result[0].id }, SECRET_KEY, { expiresIn: "15m" })
+        const token = jwt.sign({ email: email }, SECRET_KEY, { expiresIn: "15m" })
 
         res.status(201).json({token: token, message: "user created"});
     } catch (err) {
