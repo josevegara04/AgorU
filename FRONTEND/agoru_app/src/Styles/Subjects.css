@@ -1,0 +1,9 @@
+.subjects-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.subject-content{
+    padding-left: 20px;
+}
