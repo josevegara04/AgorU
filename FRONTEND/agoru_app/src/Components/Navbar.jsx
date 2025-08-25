@@ -4,23 +4,12 @@ import React from "react";
 import "../Styles/Navbar.css";
 
 export default function Navbar({ onButtonClick, email }) {
-  async function login() {
-    const url = "http://localhost:3000";
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      console.log(response.json().message);
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
-
   return (
     <nav className="navbar">
       <img src="../public/images/logo.jpg" alt="" className="" />
       <div className="fields">
         <button onClick={() => onButtonClick("home")}> Inicio </button>
-        <a href="#">Materias</a>
+        <button onClick={() => onButtonClick("subjects")}> Materias </button>
         <a href="#">Reseñas</a>
         {!email ? (
           <>
