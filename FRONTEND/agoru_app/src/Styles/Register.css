@@ -1,7 +1,7 @@
 .register-window {
     display: flex;
     flex-direction: column;
-    background-color: aqua;
+    background-color: #196e97;
     align-items: center;
     padding: 10%;
 }
