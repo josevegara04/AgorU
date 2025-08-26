@@ -8,6 +8,7 @@
     position: sticky;
     top: 0;
     z-index: 10;
+    height: 10vh;
 }
 .navbar img{
     height: 100px;

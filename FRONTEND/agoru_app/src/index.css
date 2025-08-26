@@ -5,8 +5,11 @@
 }
 
 html, body, #root {
+  display:flex;
+  flex-direction: column;
   margin: 0;
   padding: 0;
+  height: 100vh;
   background-color: white;
   min-height: 100%;
   font-family: var(--main-font)

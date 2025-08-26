@@ -116,10 +116,7 @@ function Subjects({ email }) {
           ))}
         </ul>
       </div>
-      <div className="subject-content">
-        <h1>{selectedSubject}</h1>
-        {resource === "studyMaterial" ? <StudyMaterial /> : <Reviews />}
-      </div>
+      {resource === "studyMaterial" ? <StudyMaterial subject={selectedSubject}/> : <Reviews subject={selectedSubject}/>}
     </div>
   );
 }
