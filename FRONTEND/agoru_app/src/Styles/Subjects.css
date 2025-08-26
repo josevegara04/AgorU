@@ -5,6 +5,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     padding-right: 10px;
+    overflow: hidden;
 }
 .subjects-sidebar {
     padding-left: 20px;

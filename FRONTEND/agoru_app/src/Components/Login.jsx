@@ -29,6 +29,7 @@ function Login({ onSuccess, setUserEmail }) {
       } else {
         localStorage.setItem("token", data.token);
         localStorage.setItem("email", email);
+        localStorage.setItem("id", data.id);
         setUserEmail(email);
         onSuccess();
       }

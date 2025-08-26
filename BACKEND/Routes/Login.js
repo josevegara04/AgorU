@@ -25,10 +25,11 @@ router.post("/", async (req, res) => {
         }
 
         // Crea el token 
-        const token = jwt.sign({ email: result[0].email, id: result[0].id }, SECRET_KEY, { expiresIn: "15m" })
+        const token = jwt.sign({ email: result[0].email, id: result[0].id}, SECRET_KEY, { expiresIn: "15m" })
 
         return res.status(201).json({
             token: token, 
+            id: result[0].id,
             message: "user created"
         });
     } catch (err) {

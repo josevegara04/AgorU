@@ -33,9 +33,9 @@ router.post("/", checkUser, async (req, res) => {
         const [result] = await db.query("insert into user(email, password) values(?, ?)", [email, hashedPassword]);
 
         // Crea el token
-        const token = jwt.sign({ email: email }, SECRET_KEY, { expiresIn: "15m" })
+        const token = jwt.sign({ email: email, id: result.insertId }, SECRET_KEY, { expiresIn: "15m" })
 
-        res.status(201).json({token: token, message: "user created"});
+        res.status(201).json({token: token, id: result.insertId, message: "user created"});
     } catch (err) {
         console.error(err);
         res.status(500).json({message: "error inserting user"});

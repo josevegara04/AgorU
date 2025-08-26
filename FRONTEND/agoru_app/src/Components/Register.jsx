@@ -35,6 +35,9 @@ function Register({ onSuccess, setUserEmail }) {
 
       if (response.status === 201) {
         setUserEmail(email);
+        localStorage.setItem("email", email);
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("id", data.id);
         onSuccess(); 
       } else if (response.status === 400) {
         alert(data.message || "El email ya existe");
