@@ -1,12 +1,12 @@
 import express, { response } from "express";
 import db from "../db.js"
-import jwt from "jsonwebtoken";
 import { authMiddleware } from "../index.js";
 
 const router = express.Router();
 const SECRET_KEY = process.env.SECRET_KEY;
 
-router.get("/:subjectId", async(req, res) => {
+// Endpoint para buscar todas las reseñas de una materia por id
+router.get("/:subjectId", authMiddleware, async(req, res) => {
     const {subjectId} = req.params;
 
     try{
@@ -22,7 +22,7 @@ router.get("/:subjectId", async(req, res) => {
     }
 })
 
-router.post("/postReview", async(req, res) => {
+router.post("/postReview", authMiddleware, async(req, res) => {
     const { idPublisher, content, idSubject} = req.body;
 
     try{

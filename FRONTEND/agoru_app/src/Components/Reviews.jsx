@@ -18,7 +18,7 @@ function Reviews({ subject }) {
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            authorization: `Bearer ${localStorage.getItem("token")}`,
             "Content-Type": "application/json",
           },
         }
@@ -28,6 +28,8 @@ function Reviews({ subject }) {
 
       if (response.status === 400) {
         setReviews([]);
+      } else if(response.status === 403){
+        console.log(data.message);
       } else {
         setReviews(data);
       }
@@ -41,7 +43,7 @@ function Reviews({ subject }) {
       const response = await fetch(`http://localhost:3000/reviews/postReview`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({

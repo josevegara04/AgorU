@@ -10,6 +10,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const SECRET_KEY = process.env.SECRET_KEY;
 
 app.use(express.json());
 app.use(cors());
@@ -22,10 +23,11 @@ app.use("/reviews", reviewsRoutes);
 // Middleware para autenticar el token enviado desde la petición
 export function authMiddleware(req, res, next) {
   const authHeader = req.headers["authorization"]; 
-  if (!authHeader) return res.status(401).json({ message: "No token provided" });
+  if (!authHeader) return res.status(401).json({ message: "No token provided!" });
 
   const token = authHeader.split(" ")[1]; 
   try {
+    console.log(token);
     const decoded = jwt.verify(token, SECRET_KEY); 
     req.user = decoded; 
     next();
