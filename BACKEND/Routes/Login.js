@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 const router = express.Router();
 const SECRET_KEY = process.env.SECRET_KEY;
 
+// Endpoint para iniciar sesión
 router.post("/", async (req, res) => {
     try {
         
