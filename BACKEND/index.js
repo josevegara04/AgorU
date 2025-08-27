@@ -22,6 +22,7 @@ app.use("/reviews", reviewsRoutes);
 
 // Middleware para autenticar el token enviado desde la petición
 export function authMiddleware(req, res, next) {
+  console.log("Buenassss")
   const authHeader = req.headers["authorization"]; 
   if (!authHeader) return res.status(401).json({ message: "No token provided!" });
 

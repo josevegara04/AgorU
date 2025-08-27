@@ -15,6 +15,26 @@
     padding: 1rem;
     flex: 1;
 }
+.review-item{
+    display:flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+}
+.review-content{
+    flex: 1;
+}
+.reaction-box{
+    display:flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+.like-box{
+    display: flex;
+    flex-direction: column;
+}
 .post-review{
     padding: 1rem;  
     background: #eee;

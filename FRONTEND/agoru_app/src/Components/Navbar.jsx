@@ -22,8 +22,9 @@ export default function Navbar({ onButtonClick, email }) {
         ) : (
           <button
             onClick={() => {
-              localStorage.removeItem("token");
-              localStorage.removeItem("email");
+              sessionStorage.removeItem("token");
+              sessionStorage.removeItem("email");
+              sessionStorage.removeItem("id");
               window.location.reload();
             }}
           >

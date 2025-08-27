@@ -3,24 +3,31 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import "../Styles/reviews.css";
+import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 
 function Reviews({ subject }) {
   const [reviews, setReviews] = useState([]);
-  const email = localStorage.getItem("email");
-  const id = localStorage.getItem("id");
+  const email = sessionStorage.getItem("email");
+  const id = sessionStorage.getItem("id");
   const [userReview, setUserReview] = useState("");
   const reviewsEndRef = useRef(null);
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
 
+  // Función para mostrar las reviews de una materia
   async function fetchReviews() {
     try {
       const response = await fetch(
         `http://localhost:3000/reviews/${subject.code}`,
         {
-          method: "GET",
+          method: "POST",
           headers: {
-            authorization: `Bearer ${localStorage.getItem("token")}`,
+            authorization: `Bearer ${sessionStorage.getItem("token")}`,
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({
+            idUser: id,
+          }),
         }
       );
 
@@ -28,7 +35,7 @@ function Reviews({ subject }) {
 
       if (response.status === 400) {
         setReviews([]);
-      } else if(response.status === 403){
+      } else if (response.status === 403) {
         console.log(data.message);
       } else {
         setReviews(data);
@@ -38,12 +45,16 @@ function Reviews({ subject }) {
     }
   }
 
+  // Función para publicar una review
   async function postReview() {
+    if (!id) {
+      return alert("Inicia sesión para poder publicar una reseña");
+    }
     try {
       const response = await fetch(`http://localhost:3000/reviews/postReview`, {
         method: "POST",
         headers: {
-          authorization: `Bearer ${localStorage.getItem("token")}`,
+          authorization: `Bearer ${sessionStorage.getItem("token")}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -65,12 +76,54 @@ function Reviews({ subject }) {
     }
   }
 
+  // Función para manejar los likes y dislikes
+  async function handleLikes(x, review) {
+    if (!id) {
+      return alert("Inicia sesión");
+    }
+
+    let field;
+
+    if (x === "like") {
+      field = "likes_count";
+    } else {
+      field = "dislikes_count";
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/reviews/handleLikes/review`,
+        {
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            change: field,
+            idReview: review.id,
+            idUser: id,
+          }),
+        }
+      );
+
+      const data = await response.json();
+      if (response.status === 200) {
+        fetchReviews();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // Hace que se haga scroll hasta la última reseña publicada
   useEffect(() => {
-    if(reviewsEndRef.current){
+    if (reviewsEndRef.current) {
       reviewsEndRef.current.scrollTop = reviewsEndRef.current.scrollHeight;
     }
   }, [reviews]);
 
+  // Hace que se traigan todas las reseñas de una materia cuando es pulsada en el sidebar
   useEffect(() => {
     if (subject.code) {
       fetchReviews();
@@ -87,26 +140,56 @@ function Reviews({ subject }) {
         {reviews.length > 0 ? (
           reviews.map((review, index) => (
             <div key={index} className="review-item">
-              <p>{review.content}</p>
-              <p>
-                <small>Publicado por: {review.email}</small>
-              </p>
-              <p>
-                <small>
-                  {new Date(review.postDate).toLocaleDateString("es-CO", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </small>
-                <br />
-                <small>
-                  {new Date(review.postDate).toLocaleTimeString("es-CO", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </small>
-              </p>
+              <div className="review-content">
+                <p>{review.content}</p>
+                <p>
+                  <small>Publicado por: {review.email}</small>
+                </p>
+                <p>
+                  <small>
+                    {new Date(review.postDate).toLocaleDateString("es-CO", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </small>
+                  <br />
+                  <small>
+                    {new Date(review.postDate).toLocaleTimeString("es-CO", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </small>
+                </p>
+              </div>
+              <div className="reaction-box">
+                <div className="like-box">
+                  <p>
+                    <small>{review.likes_count}</small>
+                  </p>
+                  <button
+                    className="like-button"
+                    onClick={() => handleLikes("like", review)}
+                  >
+                    <FaThumbsUp
+                      color={review.liked === 1 ? "blue" : "gray"}
+                    ></FaThumbsUp>
+                  </button>
+                </div>
+                <div className="dislike-box">
+                  <p>
+                    <small>{review.dislikes_count}</small>
+                  </p>
+                  <button
+                    className="dislike-button"
+                    onClick={() => handleLikes("dislike", review)}
+                  >
+                    <FaThumbsDown
+                      color={review.disliked === 1 ? "blue" : "gray"}
+                    ></FaThumbsDown>
+                  </button>
+                </div>
+              </div>
             </div>
           ))
         ) : (

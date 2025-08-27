@@ -22,13 +22,16 @@ function App() {
 
   return (
     <>
+      {/* Componente navbar */}
       <Navbar 
       onButtonClick={setView}
       email={userEmail}
       />
+
+      {/* Dependiendo de la variable view, se muestra un componente */}
       {view === "login" && (
         <Login 
-        onSuccess={() => setView("home")}
+        onSuccess={(x) => setView(x)}
         setUserEmail={setUserEmail}/>
       )}
       {view === "register" && (

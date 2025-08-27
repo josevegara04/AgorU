@@ -3,6 +3,7 @@
 import React from "react";
 import "../Styles/Login.css";
 import { useState } from "react";
+import Register from "./Register"
 
 function Login({ onSuccess, setUserEmail }) {
   const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ function Login({ onSuccess, setUserEmail }) {
       const response = await fetch("http://localhost:3000/login", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -26,14 +27,17 @@ function Login({ onSuccess, setUserEmail }) {
 
       if (response.status === 400) {
         alert(data.message);
-      } else {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("email", email);
-        localStorage.setItem("id", data.id);
+      } else if(response.status === 403){
+        alert("Inicia sesión"); 
+      } else{
+        sessionStorage.setItem("token", data.token);
+        sessionStorage.setItem("email", email);
+        sessionStorage.setItem("id", data.id);
         setUserEmail(email);
-        onSuccess();
+        onSuccess("home");
       }
     } catch (err) {
+      alert("Tu sesión expiró. Inicia sesión.")
       console.error(err);
     }
   }
@@ -62,6 +66,10 @@ function Login({ onSuccess, setUserEmail }) {
           </div>
           <button type="submit"> Iniciar Sesión </button>
         </form>
+        <div className="register-section">
+          <p> ¿No tienes cuenta?</p>
+          <button onClick={() => onSuccess("register")}> Registrar </button>
+        </div>
       </div>
     </div>
   );
