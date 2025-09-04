@@ -6,7 +6,7 @@ const router = express.Router();
 const SECRET_KEY = process.env.SECRET_KEY;
 
 // Endpoint para buscar todas las reseñas de una materia por id
-router.post("/:subjectId", async (req, res) => {
+router.post("/getReviews/:subjectId", async (req, res) => {
   const { subjectId } = req.params;
   const { idUser } = req.body;
 

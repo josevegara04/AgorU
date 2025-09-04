@@ -18,7 +18,7 @@ function Reviews({ subject }) {
   async function fetchReviews() {
     try {
       const response = await fetch(
-        `http://localhost:3000/reviews/${subject.code}`,
+        `http://localhost:3000/reviews/getReviews/${subject.code}`,
         {
           method: "POST",
           headers: {

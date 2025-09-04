@@ -13,10 +13,11 @@ function App() {
 
   // Verifica si ya hay una sesión iniciada
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (token) {
-      setUserEmail(localStorage.getItem("email"));
+      setUserEmail(sessionStorage.getItem("email"));
       setView("home");
+      console.log("si")
     }
   }, []);
 
