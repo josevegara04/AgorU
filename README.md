@@ -4,7 +4,7 @@ AgorU is web platform designed to help EAFIT students with their class selection
 
 To run the project, clone the repository on a new folder in your computer, using this command:
 
-`git clone`
+`git clone https://github.com/josevegara04/AgorU.git`
 
 Once you have the project on your local computer, the server and the frontend must be running. 
 
