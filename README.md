@@ -7,6 +7,7 @@ To run the project, clone the repository on a new folder in your computer, using
 `git clone https://github.com/josevegara04/AgorU.git`
 
 Once you have the project on your local computer, the server and the frontend must be running. 
+Make sure to have git and Node.js installed on your computer before doing the following steps.
 
 ## Server
 1. To run the server, open the terminal and navigate to the BACKEND folder
