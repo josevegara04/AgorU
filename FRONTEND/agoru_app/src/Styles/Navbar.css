@@ -9,6 +9,7 @@
     top: 0;
     z-index: 10;
     height: 10vh;
+    background-color: #58B8E4;
 }
 .navbar img{
     height: 100px;
