@@ -5,8 +5,7 @@ import { authMiddleware } from "../index.js";
 const router = express.Router();
 const SECRET_KEY = process.env.SECRET_KEY;
 
-// Endpoint para buscar todas las reseñas de una materia por id
-router.post("/getReviews/:subjectId", async (req, res) => {
+export async function fetchReviews(req, res, next) {
   const { subjectId } = req.params;
   const { idUser } = req.body;
 
@@ -19,11 +18,17 @@ router.post("/getReviews/:subjectId", async (req, res) => {
     if (result.length === 0) {
       return res.status(400).json({ message: "no reviews yet" });
     }
-    return res.status(200).json(result);
+    req.reviews = result;
+    return next();
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: "error in database" });
   }
+}
+
+// Endpoint para buscar todas las reseñas de una materia por id
+router.post("/getReviews/:subjectId", fetchReviews, async (req, res) => {
+  return res.status(200).json(req.reviews);
 });
 
 // Endopoint para publicar
