@@ -1,8 +1,6 @@
 import express, { response } from "express";
-import db from "../db.js"
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 import OpenAI from "openai";
+import { fetchReviews } from "./Reviews.js" 
 
 const router = express.Router();
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -12,33 +10,29 @@ const openai = new OpenAI({
 });
 
 // Endpoint para resumir reseñas
-router.post("/summarize", async (req, res) => {
+router.post("/summarize/:subjectId", fetchReviews, async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const reviews = req.reviews;
+        const concatenatedContent = reviews.map(review => review.content).join("\n");
 
-        // Verifica que si exista el usuario
-        const [result] = await db.query("SELECT * from user WHERE email = ?", [email]);
-        if(result.length == 0){
-            return res.status(400).json({message: "user does not exist"});
-        }
-
-        // Verifica que la contraseña
-        const match = await bcrypt.compare(password, result[0].password);
-        if(!match) {
-            return res.status(400).json({message: "invalid pasword"});
-        }
-
-        // Crea el token 
-        const token = jwt.sign({ email: result[0].email, id: result[0].id}, SECRET_KEY, { expiresIn: "15m" })
-
-        return res.status(201).json({
-            token: token, 
-            id: result[0].id,
-            message: "user created"
+        const completion = await openai.chat.completions.create({
+            model: "gpt-3.5-turbo",
+            messages: [
+                {
+                    role: "system",
+                    content: "You are a helpful assistant that summarizes reviews."
+                }, {
+                    role: "system",
+                    content: `Summarize the following reviews: \n${concatenatedContent}`
+                }
+            ],
         });
-    } catch (err) {
+
+        const summary = completion.choices[0].message.content;
+        res.json({summary});
+    } catch(err) {
         console.error(err);
-        res.status(500).json({message: "error inserting user"});
+        res.status(500).json({message: "error summaring reviews"});
     }
 })
 export default router;
