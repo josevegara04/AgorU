@@ -2,6 +2,7 @@ import express from "express";
 import registerRoutes from "./Routes/Register.js";
 import loginRoutes from "./Routes/Login.js";
 import reviewsRoutes from "./Routes/Reviews.js";
+import openAIServiceRoute from "./Routes/OpenAIService.js"
 import dotenv from "dotenv";
 import cors from "cors";
 import jwt from "jsonwebtoken";
@@ -19,6 +20,7 @@ app.use(cors());
 app.use("/login", loginRoutes);
 app.use("/register", registerRoutes);
 app.use("/reviews", reviewsRoutes);
+app.use("openAIService", openAIServiceRoute);
 
 // Middleware para autenticar el token enviado desde la petición
 export function authMiddleware(req, res, next) {
