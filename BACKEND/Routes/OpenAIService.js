@@ -16,7 +16,7 @@ router.post("/summarize/:subjectId", fetchReviews, async (req, res) => {
         const concatenatedContent = reviews.map(review => review.content).join("\n");
 
         const completion = await openai.chat.completions.create({
-            model: "gpt-4.1-mini",
+            model: "gpt-3.5-turbo",
             messages: [
                 {
                     role: "system",
