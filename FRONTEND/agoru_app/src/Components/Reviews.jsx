@@ -132,79 +132,86 @@ function Reviews({ subject }) {
   }, [subject.code]);
 
   return (
-    <div className="subject-content">
-      <div className="title">
-        <h1>{subject.name}</h1>
-        <h2> Reseñas </h2>
-      </div>
-      <div className="reviews" ref={reviewsEndRef}>
-        {reviews.length > 0 ? (
-          reviews.map((review, index) => (
-            <div key={index} className="review-item">
-              <div className="review-content">
-                <p>{review.content}</p>
-                <p>
-                  <small>Publicado por: {review.email}</small>
-                </p>
-                <p>
-                  <small>
-                    {new Date(review.postDate).toLocaleDateString("es-CO", {
-                      day: "2-digit",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </small>
-                  <br />
-                  <small>
-                    {new Date(review.postDate).toLocaleTimeString("es-CO", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </small>
-                </p>
-              </div>
-              <div className="reaction-box">
-                <div className="like-box">
+    <div className="content-summary">
+      <div className="subject-content">
+        <div className="tittle">
+          <div className="tittle-content">
+            <h1>{subject.name}</h1>
+            <h2> Reseñas </h2>
+          </div>
+          <button className="summary-button">
+
+          </button>
+        </div>
+        <div className="reviews" ref={reviewsEndRef}>
+          {reviews.length > 0 ? (
+            reviews.map((review, index) => (
+              <div key={index} className="review-item">
+                <div className="review-content">
+                  <p>{review.content}</p>
                   <p>
-                    <small>{review.likes_count}</small>
+                    <small>Publicado por: {review.email}</small>
                   </p>
-                  <button
-                    className="like-button"
-                    onClick={() => handleLikes("like", review)}
-                  >
-                    <FaThumbsUp
-                      color={review.liked === 1 ? "blue" : "gray"}
-                    ></FaThumbsUp>
-                  </button>
-                </div>
-                <div className="dislike-box">
                   <p>
-                    <small>{review.dislikes_count}</small>
+                    <small>
+                      {new Date(review.postDate).toLocaleDateString("es-CO", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </small>
+                    <br />
+                    <small>
+                      {new Date(review.postDate).toLocaleTimeString("es-CO", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </small>
                   </p>
-                  <button
-                    className="dislike-button"
-                    onClick={() => handleLikes("dislike", review)}
-                  >
-                    <FaThumbsDown
-                      color={review.disliked === 1 ? "blue" : "gray"}
-                    ></FaThumbsDown>
-                  </button>
+                </div>
+                <div className="reaction-box">
+                  <div className="like-box">
+                    <p>
+                      <small>{review.likes_count}</small>
+                    </p>
+                    <button
+                      className="like-button"
+                      onClick={() => handleLikes("like", review)}
+                    >
+                      <FaThumbsUp
+                        color={review.liked === 1 ? "blue" : "gray"}
+                      ></FaThumbsUp>
+                    </button>
+                  </div>
+                  <div className="dislike-box">
+                    <p>
+                      <small>{review.dislikes_count}</small>
+                    </p>
+                    <button
+                      className="dislike-button"
+                      onClick={() => handleLikes("dislike", review)}
+                    >
+                      <FaThumbsDown
+                        color={review.disliked === 1 ? "blue" : "gray"}
+                      ></FaThumbsDown>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p> No se han publicado reseñas por el momento </p>
-        )}
-      </div>
-      <div className="post-review">
-        <input
-          type="text"
-          className=""
-          value={userReview}
-          onChange={(e) => setUserReview(e.target.value)}
-        />
-        <button onClick={() => postReview()}> Publicar </button>
+            ))
+          ) : (
+            <p> No se han publicado reseñas por el momento </p>
+          )}
+        </div>
+        <div className="post-review">
+          <input
+            type="text"
+            className=""
+            value={userReview}
+            onChange={(e) => setUserReview(e.target.value)}
+          />
+          <button onClick={() => postReview()}> Publicar </button>
+        </div>
       </div>
     </div>
   );

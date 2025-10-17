@@ -5,8 +5,9 @@ import { useState } from "react";
 
 function SummaryBar() {
     return(
-        <>
-        </>
+        <div className="summary-bar">
+
+        </div>
     )
 };
 

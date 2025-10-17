@@ -1,3 +1,8 @@
+.content-summary{
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+}
 .subject-content{
     flex: 1;
     display: flex;
@@ -5,7 +10,18 @@
     height: 100%;
     margin-left: 1rem;
 }
-.title{
+.tittle{
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+    justify-content: space-between;
+    background: #f5f5f5;
+    flex: 0 0 15%;
+}
+.tittle-content{
+    display: flex;
+    width: 70%;
+    flex-direction: column;
     padding: 1rem;
     background: #f5f5f5;
     flex: 0 0 15%;
