@@ -2,6 +2,7 @@ import express, { response } from "express";
 /* import OpenAI from "openai"; */
 import axios from "axios";
 import { fetchReviews } from "./Reviews.js";
+import db from "../db.js";
 
 const router = express.Router();
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -17,6 +18,11 @@ const HF_TOKEN = process.env.HUGGINGFACE_API_KEY;
 // Endpoint para resumir reseñas
 router.post("/summarize/:subjectId", fetchReviews, async (req, res) => {
   try {
+    const [resultName] = await db.query(
+      "SELECT name FROM subject WHERE id = ?",
+      [req.params.subjectId]
+    );
+
     const reviews = req.reviews;
     if (!reviews || reviews.length === 0) {
       return res.status(400).json({ message: "No reviews found to summarize" });
@@ -26,12 +32,7 @@ router.post("/summarize/:subjectId", fetchReviews, async (req, res) => {
       .map((review) => review.content)
       .join("\n");
 
-    const prompt = `
-      Resume los siguientes comentarios de manera clara, fluida y con buena redacción. Son reseñas de una materia llamada:
-      Haz que el resumen suene natural y agradable, como si fuera una reseña general.
-      Comentarios:
-      ${concatenatedContent}
-    `;
+    const prompt = `Resumen de reseñas para la materia ${resultName[0].name}:\n${concatenatedContent}`;
 
     console.log(prompt);
 
@@ -65,7 +66,7 @@ router.post("/summarize/:subjectId", fetchReviews, async (req, res) => {
 
       res.json({ summary });
     } catch (hfError) {
-      cconsole.error("Hugging Face API Error:", hfError.response?.data || hfError.message);
+      console.error("Hugging Face API Error:", hfError.response?.data || hfError.message);
 
       if (hfError.response?.status === 429) {
         return res.status(429).json({
