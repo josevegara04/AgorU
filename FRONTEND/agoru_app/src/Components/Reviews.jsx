@@ -122,7 +122,7 @@ function Reviews({ subject }) {
   async function summarize() {
     try {
       const response = await fetch(
-        `http://localhost:3000/openAIService/summarize/${subject.code}`,
+        `http://localhost:3000/openAIService/summarizeGEMINI/${subject.code}`,
         {
           method: "POST",
           headers: {
@@ -166,14 +166,14 @@ function Reviews({ subject }) {
 
   return (
     <div className="content-summary">
-      <div className="subject-content">
+      <div className={`subject-content ${showSummary ? "with-summary" : "full"}`}>
         <div className="tittle">
           <div className="tittle-content">
             <h1>{subject.name}</h1>
             <h2> Reseñas </h2>
           </div>
           <button
-            className="summary-button"
+            className="btn btn-primary summary-button"
             onClick={() => {
               setShowSummary(true);
               summarize();
@@ -249,7 +249,7 @@ function Reviews({ subject }) {
             value={userReview}
             onChange={(e) => setUserReview(e.target.value)}
           />
-          <button onClick={() => postReview()}> Publicar </button>
+          <button className="btn btn-primary" onClick={() => postReview()}> Publicar </button>
         </div>
       </div>
       {showSummary && <SummaryBar 
