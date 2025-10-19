@@ -38,10 +38,15 @@ function Subjects({ email }) {
   );
   const [resource, setResource] = useState("studyMaterial");
   const [searchTerm, setSearchTerm] = useState("");
+
+  function normalizeText(text) {
+    return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
   const filteredSubjects = Object.values(subjects)
     .flat()
     .filter((subject) =>
-      subject.name.toLowerCase().includes(searchTerm.toLowerCase())
+      normalizeText(subject.name).includes(normalizeText(searchTerm))
     );
 
   return (
@@ -62,6 +67,13 @@ function Subjects({ email }) {
                   <li
                     key={subject.code}
                     onClick={() => {
+                      const foundSemester = Object.keys(subjects).find((semester) => 
+                        subjects[semester].some((s) => s.code === subject.code)
+                        );
+
+                      if (foundSemester) {
+                        setSelectedSemester(foundSemester);
+                      }
                       setSelectedSubject(subject);
                       setSearchTerm(""); // limpiar búsqueda al seleccionar
                     }}
