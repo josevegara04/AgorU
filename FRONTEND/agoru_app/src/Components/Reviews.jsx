@@ -14,6 +14,8 @@ function Reviews({ subject }) {
   const reviewsEndRef = useRef(null);
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
+  const [summarizeText, setSummarizeText] = useState("");
 
   // Función para mostrar las reviews de una materia
   async function fetchReviews() {
@@ -117,6 +119,37 @@ function Reviews({ subject }) {
     }
   }
 
+  async function summarize() {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/openAIService/summarizeGEMINI/${subject.code}`,
+        {
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            idUser: id,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.status === 400) {
+        setSummarizeText("No hay reseñas");
+      } else if (response.status === 403) {
+        console.log(data.message);
+      } else {
+        setSummarizeText(data.summary);
+        console.log(summarizeText)
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   // Hace que se haga scroll hasta la última reseña publicada
   useEffect(() => {
     if (reviewsEndRef.current) {
@@ -132,80 +165,96 @@ function Reviews({ subject }) {
   }, [subject.code]);
 
   return (
-    <div className="subject-content">
-      <div className="title">
-        <h1>{subject.name}</h1>
-        <h2> Reseñas </h2>
-      </div>
-      <div className="reviews" ref={reviewsEndRef}>
-        {reviews.length > 0 ? (
-          reviews.map((review, index) => (
-            <div key={index} className="review-item">
-              <div className="review-content">
-                <p>{review.content}</p>
-                <p>
-                  <small>Publicado por: {review.email}</small>
-                </p>
-                <p>
-                  <small>
-                    {new Date(review.postDate).toLocaleDateString("es-CO", {
-                      day: "2-digit",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </small>
-                  <br />
-                  <small>
-                    {new Date(review.postDate).toLocaleTimeString("es-CO", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </small>
-                </p>
-              </div>
-              <div className="reaction-box">
-                <div className="like-box">
+    <div className="content-summary">
+      <div className={`subject-content ${showSummary ? "with-summary" : "full"}`}>
+        <div className="tittle">
+          <div className="tittle-content">
+            <h1>{subject.name}</h1>
+            <h2> Reseñas </h2>
+          </div>
+          <button
+            className="btn btn-primary summary-button"
+            onClick={() => {
+              setShowSummary(true);
+              summarize();
+            }}
+          >
+            Resumir
+          </button>
+        </div>
+        <div className="reviews" ref={reviewsEndRef}>
+          {reviews.length > 0 ? (
+            reviews.map((review, index) => (
+              <div key={index} className="review-item">
+                <div className="review-content">
+                  <p>{review.content}</p>
                   <p>
-                    <small>{review.likes_count}</small>
+                    <small>Publicado por: {review.email}</small>
                   </p>
-                  <button
-                    className="like-button"
-                    onClick={() => handleLikes("like", review)}
-                  >
-                    <FaThumbsUp
-                      color={review.liked === 1 ? "blue" : "gray"}
-                    ></FaThumbsUp>
-                  </button>
-                </div>
-                <div className="dislike-box">
                   <p>
-                    <small>{review.dislikes_count}</small>
+                    <small>
+                      {new Date(review.postDate).toLocaleDateString("es-CO", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </small>
+                    <br />
+                    <small>
+                      {new Date(review.postDate).toLocaleTimeString("es-CO", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </small>
                   </p>
-                  <button
-                    className="dislike-button"
-                    onClick={() => handleLikes("dislike", review)}
-                  >
-                    <FaThumbsDown
-                      color={review.disliked === 1 ? "blue" : "gray"}
-                    ></FaThumbsDown>
-                  </button>
+                </div>
+                <div className="reaction-box">
+                  <div className="like-box">
+                    <p>
+                      <small>{review.likes_count}</small>
+                    </p>
+                    <button
+                      className="like-button"
+                      onClick={() => handleLikes("like", review)}
+                    >
+                      <FaThumbsUp
+                        color={review.liked === 1 ? "blue" : "gray"}
+                      ></FaThumbsUp>
+                    </button>
+                  </div>
+                  <div className="dislike-box">
+                    <p>
+                      <small>{review.dislikes_count}</small>
+                    </p>
+                    <button
+                      className="dislike-button"
+                      onClick={() => handleLikes("dislike", review)}
+                    >
+                      <FaThumbsDown
+                        color={review.disliked === 1 ? "blue" : "gray"}
+                      ></FaThumbsDown>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p> No se han publicado reseñas por el momento </p>
-        )}
+            ))
+          ) : (
+            <p> No se han publicado reseñas por el momento </p>
+          )}
+        </div>
+        <div className="post-review">
+          <input
+            type="text"
+            className=""
+            value={userReview}
+            onChange={(e) => setUserReview(e.target.value)}
+          />
+          <button className="btn btn-primary" onClick={() => postReview()}> Publicar </button>
+        </div>
       </div>
-      <div className="post-review">
-        <input
-          type="text"
-          className=""
-          value={userReview}
-          onChange={(e) => setUserReview(e.target.value)}
-        />
-        <button onClick={() => postReview()}> Publicar </button>
-      </div>
+      {showSummary && <SummaryBar 
+      summarizeText = {summarizeText}
+      onClose={() => setShowSummary(false)} />}
     </div>
   );
 }
