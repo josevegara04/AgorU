@@ -176,7 +176,7 @@ function Reviews({ subject }) {
             className="btn btn-primary summary-button"
             onClick={() => {
               setShowSummary(true);
-              summarize();
+              /*  */
             }}
           >
             Resumir
