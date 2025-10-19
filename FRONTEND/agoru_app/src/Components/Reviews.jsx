@@ -142,7 +142,8 @@ function Reviews({ subject }) {
       } else if (response.status === 403) {
         console.log(data.message);
       } else {
-        setSummarizeText(data);
+        setSummarizeText(data.summary);
+        console.log(summarizeText)
       }
     } catch (error) {
       console.error(error);
