@@ -1,0 +1,10 @@
+.subject-material{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+.tittle-content{
+    width: 100%;
+}
