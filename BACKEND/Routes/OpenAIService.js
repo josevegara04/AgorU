@@ -1,19 +1,12 @@
 import express, { response } from "express";
-/* import OpenAI from "openai"; */
-import axios from "axios";
 import { fetchReviews } from "./Reviews.js";
 import db from "../db.js";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const router = express.Router();
 const SECRET_KEY = process.env.SECRET_KEY;
 
-const HF_API_URL =
-  "https://api-inference.huggingface.co/models/facebook/bart-large-cnn";
-const HF_TOKEN = process.env.HUGGINGFACE_API_KEY;
-
-/* const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-}); */
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // Endpoint para resumir reseñas
 router.post("/summarize/:subjectId", fetchReviews, async (req, res) => {
@@ -89,64 +82,6 @@ router.post("/summarize/:subjectId", fetchReviews, async (req, res) => {
     res.status(500).json({ message: "Error processing reviews" });
   }
 });
-
-/* router.post("/summarizeHF/:subjectId", fetchReviews, async (req, res) => {
-  try {
-    const [resultName] = await db.query(
-      "SELECT name FROM subject WHERE id = ?",
-      [req.params.subjectId]
-    );
-
-    const reviews = req.reviews;
-    if (!reviews || reviews.length === 0) {
-      return res.status(400).json({ message: "No reviews found to summarize" });
-    }
-
-    const concatenatedContent = reviews
-      .map((review) => review.content)
-      .join("\n");
-
-    try {
-      const messages = `
-Eres un asistente especializado en analizar y resumir reseñas académicas de materias universitarias.
-Tu resumen debe destacar los puntos principales, positivos y negativos, de manera clara y estructurada.
-Estas son las reseñas de la materia ${resultName[0].name}:
-
-${concatenatedContent}
-
-Por favor, escribe un resumen breve que refleje las opiniones generales.
-`;
-
-      console.log(messages);
-      console.log("➡️ Enviando a Hugging Face...");
-
-      const resp = await axios.post(
-        HF_API_URL,
-        { inputs: messages },
-        {
-          headers: {
-            Authorization: `Bearer ${HF_TOKEN}`,
-            "Content-Type": "application/json",
-          },
-          timeout: 60000,
-        }
-      );
-      const summary =
-        response.data?.[0]?.generated_text ||
-        response.data?.generated_text ||
-        "No response from model";
-      res.json({ summary });
-    } catch (openAiError) {}
-  } catch (err) {
-    console.error(
-      "❌ Error en Hugging Face:",
-      err.response?.data || err.message
-    );
-    res
-      .status(500)
-      .json({ message: "Error al generar resumen con Hugging Face" });
-  }
-}); */
 
 router.post("/summarizeGEMINI/:subjectId", fetchReviews, async (req, res) => {
   try {
