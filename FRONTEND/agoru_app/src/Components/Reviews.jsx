@@ -15,6 +15,7 @@ function Reviews({ subject }) {
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
+  const [summarizeText, setSummarizeText] = useState("");
 
   // Función para mostrar las reviews de una materia
   async function fetchReviews() {
@@ -118,6 +119,36 @@ function Reviews({ subject }) {
     }
   }
 
+  async function summarize() {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/openAIService/summarize/${subject.code}`,
+        {
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            idUser: id,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.status === 400) {
+        setSummarizeText("No hay reseñas");
+      } else if (response.status === 403) {
+        console.log(data.message);
+      } else {
+        setSummarizeText(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   // Hace que se haga scroll hasta la última reseña publicada
   useEffect(() => {
     if (reviewsEndRef.current) {
@@ -140,7 +171,13 @@ function Reviews({ subject }) {
             <h1>{subject.name}</h1>
             <h2> Reseñas </h2>
           </div>
-          <button className="summary-button" onClick={()=>setShowSummary(true)}>
+          <button
+            className="summary-button"
+            onClick={() => {
+              setShowSummary(true);
+              summarize();
+            }}
+          >
             Resumir
           </button>
         </div>
@@ -214,7 +251,9 @@ function Reviews({ subject }) {
           <button onClick={() => postReview()}> Publicar </button>
         </div>
       </div>
-      {showSummary && (<SummaryBar onClose={() => setShowSummary(false)}/>)}
+      {showSummary && <SummaryBar 
+      summarizeText = {summarizeText}
+      onClose={() => setShowSummary(false)} />}
     </div>
   );
 }
