@@ -14,6 +14,7 @@ function Reviews({ subject }) {
   const reviewsEndRef = useRef(null);
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
 
   // Función para mostrar las reviews de una materia
   async function fetchReviews() {
@@ -139,8 +140,8 @@ function Reviews({ subject }) {
             <h1>{subject.name}</h1>
             <h2> Reseñas </h2>
           </div>
-          <button className="summary-button">
-
+          <button className="summary-button" onClick={()=>setShowSummary(true)}>
+            Resumir
           </button>
         </div>
         <div className="reviews" ref={reviewsEndRef}>
@@ -213,6 +214,7 @@ function Reviews({ subject }) {
           <button onClick={() => postReview()}> Publicar </button>
         </div>
       </div>
+      {showSummary && (<SummaryBar onClose={() => setShowSummary(false)}/>)}
     </div>
   );
 }
