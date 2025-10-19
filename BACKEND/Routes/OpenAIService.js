@@ -34,8 +34,6 @@ router.post("/summarize/:subjectId", fetchReviews, async (req, res) => {
 
     const prompt = `Resumen de reseñas para la materia ${resultName[0].name}:\n${concatenatedContent}`;
 
-    console.log(prompt);
-
     try {
       /* const completion = await openai.chat.completions.create({
                 model: "gpt-3.5-turbo",
