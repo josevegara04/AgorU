@@ -3,16 +3,24 @@
     max-width: 30;
     min-width: 0;
     padding: 10px;
+    padding-left: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     transition: all 0.3s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 .close-summary-button{
     align-self: flex-end !important;
     background-color: #196e97 !important;
 }
+.summary-bar h1{
+    margin-bottom: 10px;
+}
 .summary-text{
-    background-color: aqua;
+    background-color: rgb(146, 162, 162);
     margin-top: auto;
+    padding: 10px;
+    border-radius: 15px;
 }

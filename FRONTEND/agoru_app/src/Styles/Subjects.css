@@ -3,7 +3,6 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: stretch;
-    padding-right: 10px;
     overflow: hidden;
     height: 85vh;
 }
