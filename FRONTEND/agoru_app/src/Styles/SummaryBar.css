@@ -1,15 +1,18 @@
 .summary-bar{
-    width: 300px;
-    height: 100%;
+    flex: 1;
+    max-width: 30;
+    min-width: 0;
     padding: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
+    transition: all 0.3s ease;
 }
 .close-summary-button{
-    align-self: flex-end;
+    align-self: flex-end !important;
+    background-color: #196e97 !important;
 }
 .summary-text{
-    justify-self: flex-end;
+    background-color: aqua;
+    margin-top: auto;
 }

@@ -1,15 +1,27 @@
 .content-summary{
     display: flex;
-    flex-direction: row;
     flex: 1;
     flex-direction: row;
+    height: 100%;
+    padding: 10px;
+    min-width: 0;
 }
-.subject-content{
+.subject-content.with-summary {
+    flex: 0 1 70%;
+    min-width: 50%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: all 0.3s ease;
+    max-width: 100%;
+}
+.subject-content.full {
     flex: 1;
     display: flex;
     flex-direction: column;
     height: 100%;
-    margin-left: 1rem;
+    transition: all 0.3s ease;
+    max-width: 100%;
 }
 .tittle{
     display: flex;
@@ -30,7 +42,8 @@
 }
 .summary-button{
     width: 100px;
-    height: 100px;
+    height: 50px;
+    background-color:#196e97 !important ;
 }
 .reviews{
     overflow-y: auto;
@@ -68,9 +81,9 @@
 }
 .post-review input{
     flex: 1;
-    margin-right: 150px;
+    margin-right: 10px;
 }
 .post-review button{
-    margin-left: auto;
-    background-color: #196e97;
+    margin-left: auto !important;
+    background-color: #196e97 !important;
 }
