@@ -3,10 +3,13 @@
 import React from "react";
 import "../Styles/studyMaterial.css";
 
-function studyMaterial(){
+function studyMaterial({ subject }){
     return(
-        <div className="">
-            <h1> Material de estudio </h1>
+        <div className="subject-material">
+            <div className="tittle-content">
+                <h1>{subject.name}</h1>
+                <h2> Material de estudio </h2>
+            </div>
         </div>
     )
 };
