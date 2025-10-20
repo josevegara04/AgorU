@@ -173,7 +173,7 @@ function Reviews({ subject }) {
             <h2> Reseñas </h2>
           </div>
           <button
-            className="btn btn-primary summary-button"
+            className="btn btn-outline-primary summary-button"
             onClick={() => {
               setShowSummary(true);
               /*  */
