@@ -25,11 +25,25 @@
 }
 
 .fields button{
-    padding-left: 18px;
     background: none;
-    border-color: transparent;
+    border: 2px solid transparent;
     transition: ease-in 0.2s;
+    width: 100px;
+    height: 100px;
+    box-shadow: 0 0 5px transparent;
+    color: white;
 }
 .fields button:hover{
-    border-color: aqua;
+    border-color: #23495b !important;
+    background-color: #3b7d9c !important;
+    transform: scale(1.05);
+}
+.fields button:active{
+    background-color: #3b7d9c !important;
+    transform: scale(0.98);
+}
+.fields button:focus {
+  background-color: #3b7d9c;
+  border-color: none;
+  outline: none; 
 }

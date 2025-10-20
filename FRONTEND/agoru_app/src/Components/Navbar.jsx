@@ -8,19 +8,20 @@ export default function Navbar({ onButtonClick, email }) {
     <nav className="navbar">
       <img src="../public/images/logo.png" alt="" className="" />
       <div className="fields">
-        <button onClick={() => onButtonClick("home")}> Inicio </button>
-        <button onClick={() => onButtonClick("subjects")}> Materias </button>
+        <button className="btn btn-outline-primary" onClick={() => onButtonClick("home")}> Inicio </button>
+        <button className="btn btn-outline-primary" onClick={() => onButtonClick("subjects")}> Materias </button>
         {!email ? (
           <>
-            <button onClick={() => onButtonClick("login")}>
+            <button className="btn btn-outline-primary" onClick={() => onButtonClick("login")}>
               Iniciar Sesión
             </button>
-            <button onClick={() => onButtonClick("register")}>
+            <button className="btn btn-outline-primary" onClick={() => onButtonClick("register")}>
               Registrarse
             </button>
           </>
         ) : (
           <button
+            className="btn btn-outline-primary"
             onClick={() => {
               sessionStorage.removeItem("token");
               sessionStorage.removeItem("email");
