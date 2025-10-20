@@ -17,9 +17,6 @@
     top: 0;
     background-color: #BBE3F8;
 }
-.subject-content{
-    padding-left: 20px;
-}
 .search{
     display: flex;
     flex-direction: column;
