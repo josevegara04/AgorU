@@ -210,9 +210,6 @@ function Reviews({ subject }) {
                 </div>
                 <div className="reaction-box">
                   <div className="like-box">
-                    <p>
-                      <small>{review.likes_count}</small>
-                    </p>
                     <button
                       className="like-button"
                       onClick={() => handleLikes("like", review)}
@@ -221,11 +218,11 @@ function Reviews({ subject }) {
                         color={review.liked === 1 ? "blue" : "gray"}
                       ></FaThumbsUp>
                     </button>
+                    <p>
+                      <small>{review.likes_count}</small>
+                    </p>
                   </div>
                   <div className="dislike-box">
-                    <p>
-                      <small>{review.dislikes_count}</small>
-                    </p>
                     <button
                       className="dislike-button"
                       onClick={() => handleLikes("dislike", review)}
@@ -234,6 +231,9 @@ function Reviews({ subject }) {
                         color={review.disliked === 1 ? "blue" : "gray"}
                       ></FaThumbsDown>
                     </button>
+                    <p>
+                      <small>{review.dislikes_count}</small>
+                    </p>
                   </div>
                 </div>
               </div>
