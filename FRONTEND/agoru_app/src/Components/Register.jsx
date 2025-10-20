@@ -51,37 +51,40 @@ function Register({ onSuccess, setUserEmail }) {
   return (
     <div className="register-window">
       <h1>REGISTRO</h1>
-      <div className="form">
-        <form onSubmit={register}>
-          <div>
-            <label htmlFor="">Email</label>
+      <div className="form-container-register">
+        <form onSubmit={register} className="form register">
+          <div className="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email</label>
             <input
               name="email"
+              className="form-control"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div>
-            <label htmlFor="">Contraseña</label>
+          <div className="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Contraseña</label>
             <input
               name="password"
               type="password"
+              className="form-control"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <div>
-            <label htmlFor="">Confirmar contraseña</label>
+          <div className="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Confirmar contraseña</label>
             <input
               type="password"
+              className="form-control"
               value={checkPass}
               onChange={(e) => {
                 setCheckPass(e.target.value);
               }}
             />
           </div>
-          <button type="submit">Registrar</button>
+          <button className="btn btn-primary login-button" type="submit">Registrar</button>
         </form>
       </div>
     </div>

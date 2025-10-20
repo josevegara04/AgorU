@@ -5,8 +5,28 @@
     align-items: center;
     padding: 10%;
 }
-.form {
+.register-window h1{
+    color: white;
+}
+.form-container-register{
+    display: flex;
+    height: 350px;
+    width: 50%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, 
+                rgba(0, 0, 0, 0.22) 0px 15px 12px;
+    border-radius: 10px;
+    transform: translateY(-5px); 
+    transition: transform 0.3s ease;
+    padding: 10px;
+}
+.register{
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
 }
