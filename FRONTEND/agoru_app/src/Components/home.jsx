@@ -7,7 +7,7 @@ import { useState } from "react";
 function Home({ email }) {
 return(
     <div className="container">
-        <h1>Buenas</h1>
+        <h1>Bienvenido a AgorU</h1>
         <div className=""></div>
         <div className=""></div>
     </div>
