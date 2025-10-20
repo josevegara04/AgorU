@@ -44,31 +44,35 @@ function Login({ onSuccess, setUserEmail }) {
   return (
     <div className="login-window">
       <h1>LOGIN</h1>
-      <div className="form">
-        <form action={login}>
-          <div>
-            <label htmlFor="">Email</label>
+      <div className="form-container">
+        <form action={login} className="form">
+          <div className="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email</label>
             <input
               name="email"
+              className="form-control"
+              id="exampleInputEmail1" 
+              aria-describedby="emailHelp"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div>
-            <label htmlFor="">Contraseña</label>
+          <div className="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Contraseña</label>
             <input
               name="password"
+              className="form-control"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button type="submit"> Iniciar Sesión </button>
+          <button type="submit" className="btn btn-primary login-button"> Iniciar Sesión </button>
         </form>
         <div className="register-section">
           <p> ¿No tienes cuenta?</p>
-          <button onClick={() => onSuccess("register")}> Registrar </button>
+          <button className="btn btn-primary login-button"onClick={() => onSuccess("register")}> Registrar </button>
         </div>
       </div>
     </div>
