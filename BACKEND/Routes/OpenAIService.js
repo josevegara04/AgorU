@@ -1,6 +1,6 @@
 import express, { response } from "express";
 import { fetchReviews } from "./Reviews.js";
-import db from "../db.js";
+import { executeQuery } from "../db.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const router = express.Router();
@@ -9,84 +9,9 @@ const SECRET_KEY = process.env.SECRET_KEY;
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // Endpoint para resumir reseñas
-router.post("/summarize/:subjectId", fetchReviews, async (req, res) => {
-  try {
-    const [resultName] = await db.query(
-      "SELECT name FROM subject WHERE id = ?",
-      [req.params.subjectId]
-    );
-
-    const reviews = req.reviews;
-    if (!reviews || reviews.length === 0) {
-      return res.status(400).json({ message: "No reviews found to summarize" });
-    }
-
-    const concatenatedContent = reviews
-      .map((review) => review.content)
-      .join("\n");
-
-    try {
-      const completion = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "system",
-            content:
-              "Eres un asistente especializado en analizar y resumir reseñas académicas.",
-          },
-          {
-            role: "user",
-            content: `Por favor, resume las siguientes reseñas de la materia ${resultName[0].name}. Enfócate en los temas más mencionados y las opiniones generales:\n\n${concatenatedContent}`,
-          },
-        ],
-        temperature: 0.7,
-        max_tokens: 150,
-      });
-
-      const summary = completion.choices[0].message.content;
-
-      res.json({ summary });
-    } catch (openAiError) {
-      console.error("OpenAI API Error:", openAiError);
-
-      if (openAiError.response?.status === 429) {
-        return res.status(429).json({
-          message:
-            "Has excedido el límite de peticiones. Por favor, intenta más tarde.",
-          error: "RATE_LIMIT",
-        });
-      }
-
-      if (openAiError.response?.status === 401) {
-        return res.status(401).json({
-          message: "Error de autenticación con OpenAI. Verifica tu API key.",
-          error: "AUTH_ERROR",
-        });
-      }
-
-      if (openAiError.response?.status === 402) {
-        return res.status(402).json({
-          message:
-            "Has excedido tu cuota de OpenAI. Por favor, verifica tu plan de facturación.",
-          error: "QUOTA_EXCEEDED",
-        });
-      }
-
-      return res.status(500).json({
-        message: "Error al generar el resumen con OpenAI",
-        error: openAiError.message || "UNKNOWN_ERROR",
-      });
-    }
-  } catch (err) {
-    console.error("General error:", err);
-    res.status(500).json({ message: "Error processing reviews" });
-  }
-});
-
 router.post("/summarizeGEMINI/:subjectId", fetchReviews, async (req, res) => {
   try {
-    console.log(process.env.GEMINI_API_KEY);
-    const [resultName] = await db.query(
+    const resultName = await executeQuery(
       "SELECT name FROM subject WHERE id = ?",
       [req.params.subjectId]
     );

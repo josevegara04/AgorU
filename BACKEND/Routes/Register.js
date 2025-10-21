@@ -1,5 +1,5 @@
 import express, { response } from "express";
-import db from "../db.js"
+import { executeQuery } from "../db.js"
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
@@ -11,8 +11,7 @@ async function checkUser(req, res, next){
     try {
         console.log(req.body);
         const { email } = req.body;
-        const [rows] = await db.query("SELECT * from user where email = ?", [email]);
-        console.log("Existing rows: ", rows);
+        const rows = await executeQuery("SELECT * from user where email = ?", [email]);
         if (rows.length > 0){
             return res.status(400).json({message: "user already exists"});
         }
@@ -30,7 +29,7 @@ router.post("/", checkUser, async (req, res) => {
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        const [result] = await db.query("insert into user(email, password) values(?, ?)", [email, hashedPassword]);
+        const result = await executeQuery("insert into user(email, password) values(?, ?)", [email, hashedPassword]);
 
         // Crea el token
         const token = jwt.sign({ email: email, id: result.insertId }, SECRET_KEY, { expiresIn: "15m" })
