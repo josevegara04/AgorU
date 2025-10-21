@@ -16,6 +16,7 @@ function Reviews({ subject }) {
   const [disliked, setDisliked] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [summarizeText, setSummarizeText] = useState("");
+  const [shouldScroll, setShouldScroll] = useState(false);
 
   // Función para mostrar las reviews de una materia
   async function fetchReviews() {
@@ -71,6 +72,7 @@ function Reviews({ subject }) {
       if (response.status === 200) {
         await fetchReviews();
         setUserReview("");
+        setShouldScroll(true);
       } else {
         console.log(data.message);
       }
@@ -152,15 +154,18 @@ function Reviews({ subject }) {
 
   // Hace que se haga scroll hasta la última reseña publicada
   useEffect(() => {
-    if (reviewsEndRef.current) {
+    if (shouldScroll && reviewsEndRef.current) {
       reviewsEndRef.current.scrollTop = reviewsEndRef.current.scrollHeight;
+      setShouldScroll(false);
     }
   }, [reviews]);
 
-  // Hace que se traigan todas las reseñas de una materia cuando es pulsada en el sidebar
+  // Hace que se traigan todas las reseñas de una materia cuando se renderiza el componente
   useEffect(() => {
     if (subject.code) {
-      fetchReviews();
+      fetchReviews().then(() => {
+        setShouldScroll(true);
+      });
     }
   }, [subject.code]);
 
