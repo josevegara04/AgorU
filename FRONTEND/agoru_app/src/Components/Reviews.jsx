@@ -3,7 +3,7 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import "../Styles/reviews.css";
-import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa";
 import SummaryBar from "./SummaryBar";
 
 function Reviews({ subject }) {
@@ -11,6 +11,7 @@ function Reviews({ subject }) {
   const email = sessionStorage.getItem("email");
   const id = sessionStorage.getItem("id");
   const [userReview, setUserReview] = useState("");
+  const [userComment, setUserComment] = useState("");
   const reviewsEndRef = useRef(null);
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
@@ -18,6 +19,9 @@ function Reviews({ subject }) {
   const [summarizeText, setSummarizeText] = useState("");
   const [shouldScroll, setShouldScroll] = useState(false);
   const [loadingReaction, setLoadingReaction] = useState(null);
+  const inputRef = useRef(null);
+  const [replyTo, setReplyTo] = useState(null);
+  const [currentReview, setCurrentReview] = useState(null);
 
   // Función para mostrar las reviews de una materia
   async function fetchReviews() {
@@ -174,6 +178,41 @@ function Reviews({ subject }) {
     }
   }, [subject.code]);
 
+  function handleCommentClick(reviewId) {
+    setReplyTo(reviewId);
+    inputRef.current?.focus();
+  }
+
+  async function postComment() {
+    if (!id) {
+      return alert("Inicia sesión para poder publicar una reseña");
+    }
+    try {
+      const response = await fetch(`http://localhost:3000/reviews/postComment`, {
+        method: "POST",
+        headers: {
+          authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          idPublisher: id,
+          content: userComment,
+          idReview: currentReview.id,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.status === 200) {
+        await fetchReviews();
+        setUserComment("");
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <div className="content-summary">
       <div className={`subject-content ${showSummary ? "with-summary" : "full"}`}>
@@ -196,60 +235,139 @@ function Reviews({ subject }) {
           {reviews.length > 0 ? (
             reviews.map((review, index) => (
               <div key={index} className="review-item">
-                <div className="review-content">
-                  <p>{review.content}</p>
-                  <p>
-                    <small>Publicado por: {review.email}</small>
-                  </p>
-                  <p>
-                    <small>
-                      {new Date(review.postDate).toLocaleDateString("es-CO", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </small>
-                    <br />
-                    <small>
-                      {new Date(review.postDate).toLocaleTimeString("es-CO", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </small>
-                  </p>
-                </div>
-                <div className="reaction-box">
-                  <div className="like-box">
-                    <button
-                      className="like-button"
-                      onClick={() => handleLikes("like", review)}
-                    >
-                      {loadingReaction === review.id ? (
-                        <div className="spinner"></div>
-                      ) : (<FaThumbsUp
-                        color={review.liked === 1 ? "blue" : "gray"}/>
-                      )}
-                    </button>
+                <div className="review-container">
+                  <div className="review-content">
+                    <p>{review.content}</p>
                     <p>
-                      <small>{review.likes_count}</small>
+                      <small>Publicado por: {review.review_author_email}</small>
+                    </p>
+                    <p>
+                      <small>
+                        {new Date(review.postDate).toLocaleDateString("es-CO", {
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </small>
+                      <br />
+                      <small>
+                        {new Date(review.postDate).toLocaleTimeString("es-CO", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </small>
                     </p>
                   </div>
-                  <div className="dislike-box">
-                    <button
-                      className="dislike-button"
-                      onClick={() => handleLikes("dislike", review)}
-                    >
-                      {loadingReaction === review.id ? (
-                        <div className="spinner"></div>
-                      ) : (<FaThumbsDown
-                        color={review.disliked === 1 ? "blue" : "gray"}/>
-                      )}
-                    </button>
-                    <p>
-                      <small>{review.dislikes_count}</small>
-                    </p>
+                  <div className="reaction-box">
+                    <div className="like-box">
+                      <button
+                        className="like-button"
+                        onClick={() => handleLikes("like", review)}
+                      >
+                        {loadingReaction === review.id ? (
+                          <div className="spinner"></div>
+                        ) : (<FaThumbsUp
+                          color={review.liked === 1 ? "blue" : "gray"}/>
+                        )}
+                      </button>
+                      <p>
+                        <small>{review.likes_count}</small>
+                      </p>
+                    </div>
+                    <div className="dislike-box">
+                      <button
+                        className="dislike-button"
+                        onClick={() => handleLikes("dislike", review)}
+                      >
+                        {loadingReaction === review.id ? (
+                          <div className="spinner"></div>
+                        ) : (<FaThumbsDown
+                          color={review.disliked === 1 ? "blue" : "gray"}/>
+                        )}
+                      </button>
+                      <p>
+                        <small>{review.dislikes_count}</small>
+                      </p>
+                    </div>
+                    <div className="comment-box">
+                      <button
+                        className="dislike-button"
+                        onClick={() => {
+                          handleCommentClick(review.id);
+                          setCurrentReview(review);
+                        }}
+                      >
+                        {loadingReaction === review.id ? (
+                          <div className="spinner"></div>
+                        ) : (<FaComment
+                          color={review.disliked === 1 ? "blue" : "gray"}/>
+                        )}
+                      </button>
+                      <p>
+                        <small>{review.dislikes_count}</small>
+                      </p>
+                    </div>
                   </div>
                 </div>
+                {review.comments && review.comments.length > 0 && (
+                  <>
+                    <div className="comments-section">
+                      <div className="comments-content">
+                        <h4>Comentarios</h4>
+                        {review.comments.map((comment, cIndex) => (
+                          <div key={cIndex} className="comment-item">
+                            <p>{comment.content}</p>
+                            <p>
+                              <small>Por: {comment.authorEmail}</small>
+                              <br />
+                              <small>
+                                {new Date(comment.postDate).toLocaleString("es-CO", {
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </small>
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="reaction-box">
+                        <div className="like-box">
+                          <button
+                            className="like-button"
+                            onClick={() => handleLikes("like", review)}
+                          >
+                            {loadingReaction === review.id ? (
+                              <div className="spinner"></div>
+                            ) : (<FaThumbsUp
+                              color={review.liked === 1 ? "blue" : "gray"}/>
+                            )}
+                          </button>
+                          <p>
+                            <small>{review.likes_count}</small>
+                          </p>
+                        </div>
+                        <div className="dislike-box">
+                          <button
+                            className="dislike-button"
+                            onClick={() => handleLikes("dislike", review)}
+                          >
+                            {loadingReaction === review.id ? (
+                              <div className="spinner"></div>
+                            ) : (<FaThumbsDown
+                              color={review.disliked === 1 ? "blue" : "gray"}/>
+                            )}
+                          </button>
+                          <p>
+                            <small>{review.dislikes_count}</small>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             ))
           ) : (
@@ -257,13 +375,42 @@ function Reviews({ subject }) {
           )}
         </div>
         <div className="post-review">
+          {replyTo && (
+            <div className="replyTo-container">
+              <p>Contestando a {currentReview.review_author_email}</p>
+              <button 
+                className="close-replyTo-button"
+                onClick={() => {
+                  setReplyTo(null);
+                  setCurrentReview(null);
+                }}
+              >
+                x
+              </button>
+            </div>
+          )}
           <input
             type="text"
+            ref={inputRef}
+            placeholder={replyTo ? "Escribe tu comentario" : "Escribe una reseña"}
             className=""
-            value={userReview}
-            onChange={(e) => setUserReview(e.target.value)}
+            value={replyTo ? userComment : userReview}
+            onChange={(e) => {
+              if(replyTo) {
+                setUserComment(e.target.value);
+              } else {
+                setUserReview(e.target.value);
+              }
+            }}
           />
-          <button className="btn btn-primary" onClick={() => postReview()}> Publicar </button>
+          <button 
+            className="btn btn-primary pb" 
+            onClick={() => {
+              replyTo ? postComment() : postReview();
+            }}
+          > 
+            Publicar 
+          </button>
         </div>
       </div>
       {showSummary && <SummaryBar 

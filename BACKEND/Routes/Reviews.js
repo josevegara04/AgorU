@@ -11,8 +11,42 @@ export async function fetchReviews(req, res, next) {
 
   try {
     const result = await executeQuery(
-      "SELECT review.*, user.email,ur.liked,ur.disliked FROM review JOIN user ON review.idPublisher = user.id LEFT JOIN user_review ur ON ur.idReview = review.id AND ur.idUser = ? WHERE review.idSubject = ?",
-      [idUser, subjectId]
+      `SELECT
+  r.*,
+  ANY_VALUE(u.email) AS review_author_email,
+  ANY_VALUE(ur.liked) AS review_liked,
+  ANY_VALUE(ur.disliked) AS review_disliked,
+  CASE 
+    WHEN COUNT(c.id) > 0 THEN
+      JSON_ARRAYAGG(
+        JSON_OBJECT(
+          'id', c.id,
+          'content', c.content,
+          'postDate', c.postDate,
+          'likesCount', c.likesCount,
+          'dislikesCount', c.dislikesCount,
+          'authorEmail', cu.email,
+          'liked', uc.liked,
+          'disliked', uc.disliked
+        )
+      )
+    ELSE NULL
+  END AS comments
+FROM review r
+JOIN user u
+  ON r.idPublisher = u.id
+LEFT JOIN user_review ur
+  ON ur.idReview = r.id AND ur.idUser = ?
+LEFT JOIN comment c
+  ON c.idReview = r.id
+LEFT JOIN user cu
+  ON cu.id = c.idPublisher
+LEFT JOIN user_comment uc
+  ON uc.idComment = c.id AND uc.idUser = ?
+WHERE r.idSubject = ?
+GROUP BY r.id
+ORDER BY r.postDate ASC;`,
+      [idUser, idUser, subjectId]
     );
 
     if (result.length === 0) {
@@ -163,6 +197,21 @@ router.post("/handleLikes/review", async (req, res) => {
       console.error(err);
       return res.status(500).json({ message: "error in database" });
     }
+  }
+});
+
+router.post("/postComment", authMiddleware, async (req, res) => {
+  const { idPublisher, content, idReview } = req.body;
+
+  try {
+    const result = await executeQuery(
+      "INSERT INTO comment(idPublisher, content, postDate, idReview, likesCount, dislikesCount) values(?, ?, NOW(), ?, 0, 0)",
+      [idPublisher, content, idReview]
+    );
+    return res.status(200).json({ message: "message" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "error in database" });
   }
 });
 
