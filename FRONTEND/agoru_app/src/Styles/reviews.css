@@ -202,6 +202,7 @@
 .pb{
     margin-left: auto !important;
     background-color: #196e97 !important;
+    min-width: fit-content;
 }
 .replyTo-container {
     background: #e9ecef;
@@ -222,6 +223,18 @@
 .close-replyTo-button:hover {
     color: #333;
 }
+.input-section{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+.input-bar{
+    flex: 1;
+}
+
 
 @keyframes spin {
   0% { transform: rotate(0deg); }

@@ -389,28 +389,30 @@ function Reviews({ subject }) {
               </button>
             </div>
           )}
-          <input
-            type="text"
-            ref={inputRef}
-            placeholder={replyTo ? "Escribe tu comentario" : "Escribe una reseña"}
-            className=""
-            value={replyTo ? userComment : userReview}
-            onChange={(e) => {
-              if(replyTo) {
-                setUserComment(e.target.value);
-              } else {
-                setUserReview(e.target.value);
-              }
-            }}
-          />
-          <button 
-            className="btn btn-primary pb" 
-            onClick={() => {
-              replyTo ? postComment() : postReview();
-            }}
-          > 
-            Publicar 
-          </button>
+          <div className="input-section">
+            <input
+              type="text"
+              ref={inputRef}
+              placeholder={replyTo ? "Escribe tu comentario" : "Escribe una reseña"}
+              className="input-bar"
+              value={replyTo ? userComment : userReview}
+              onChange={(e) => {
+                if(replyTo) {
+                  setUserComment(e.target.value);
+                } else {
+                  setUserReview(e.target.value);
+                }
+              }}
+            />
+            <button 
+              className="btn btn-primary pb" 
+              onClick={() => {
+                replyTo ? postComment() : postReview();
+              }}
+            > 
+              Publicar 
+            </button>
+          </div>
         </div>
       </div>
       {showSummary && <SummaryBar 
