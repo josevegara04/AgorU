@@ -88,6 +88,15 @@
     display: flex;
     flex-direction: column;
 }
+.spinner{
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ccc;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    display: inline-block;
+}
 .post-review{
     padding: 1rem;  
     background: #eee;
@@ -104,4 +113,10 @@
 .post-review button{
     margin-left: auto !important;
     background-color: #196e97 !important;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

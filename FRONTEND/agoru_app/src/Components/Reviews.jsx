@@ -17,6 +17,7 @@ function Reviews({ subject }) {
   const [showSummary, setShowSummary] = useState(false);
   const [summarizeText, setSummarizeText] = useState("");
   const [shouldScroll, setShouldScroll] = useState(false);
+  const [loadingReaction, setLoadingReaction] = useState(null);
 
   // Función para mostrar las reviews de una materia
   async function fetchReviews() {
@@ -96,6 +97,8 @@ function Reviews({ subject }) {
     }
 
     try {
+      setLoadingReaction(review.id);
+
       const response = await fetch(
         `http://localhost:3000/reviews/handleLikes/review`,
         {
@@ -118,6 +121,8 @@ function Reviews({ subject }) {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoadingReaction(null);
     }
   }
 
@@ -219,9 +224,11 @@ function Reviews({ subject }) {
                       className="like-button"
                       onClick={() => handleLikes("like", review)}
                     >
-                      <FaThumbsUp
-                        color={review.liked === 1 ? "blue" : "gray"}
-                      ></FaThumbsUp>
+                      {loadingReaction === review.id ? (
+                        <div className="spinner"></div>
+                      ) : (<FaThumbsUp
+                        color={review.liked === 1 ? "blue" : "gray"}/>
+                      )}
                     </button>
                     <p>
                       <small>{review.likes_count}</small>
@@ -232,9 +239,11 @@ function Reviews({ subject }) {
                       className="dislike-button"
                       onClick={() => handleLikes("dislike", review)}
                     >
-                      <FaThumbsDown
-                        color={review.disliked === 1 ? "blue" : "gray"}
-                      ></FaThumbsDown>
+                      {loadingReaction === review.id ? (
+                        <div className="spinner"></div>
+                      ) : (<FaThumbsDown
+                        color={review.disliked === 1 ? "blue" : "gray"}/>
+                      )}
                     </button>
                     <p>
                       <small>{review.dislikes_count}</small>
