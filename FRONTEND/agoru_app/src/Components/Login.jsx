@@ -47,7 +47,7 @@ function Login({ onSuccess, setUserEmail }) {
       <div className="form-container">
         <form action={login} className="form">
           <div className="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Email</label>
+            <label className="form-label">Email</label>
             <input
               name="email"
               className="form-control"
@@ -59,7 +59,7 @@ function Login({ onSuccess, setUserEmail }) {
             />
           </div>
           <div className="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+            <label className="form-label">Contraseña</label>
             <input
               name="password"
               className="form-control"
