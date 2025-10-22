@@ -303,7 +303,7 @@ function Reviews({ subject }) {
                           color={review.disliked === 1 ? "blue" : "gray"}/>
                       </button>
                       <p>
-                        <small>{review.dislikes_count}</small>
+                        <small>{review.comments_count}</small>
                       </p>
                     </div>
                   </div>
@@ -314,54 +314,56 @@ function Reviews({ subject }) {
                       <div className="comments-content">
                         {review.comments.map((comment, cIndex) => (
                           <div key={cIndex} className="comment-item">
-                            <p>{comment.content}</p>
-                            <p>
-                              <small>Por: {comment.authorEmail}</small>
-                              <br />
-                              <small>
-                                {new Date(comment.postDate).toLocaleString("es-CO", {
-                                  day: "2-digit",
-                                  month: "short",
-                                  year: "numeric",
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                })}
-                              </small>
-                            </p>
+                            <div className="comment-c">
+                              <p>{comment.content}</p>
+                              <p>
+                                <small>Por: {comment.authorEmail}</small>
+                                <br />
+                                <small>
+                                  {new Date(comment.postDate).toLocaleString("es-CO", {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </small>
+                              </p>
+                            </div>
+                            <div className="reaction-comment">
+                              <div className="like-box">
+                                <button
+                                  className="like-button"
+                                  onClick={() => handleLikes("like", review)}
+                                >
+                                  {loadingReaction === review.id ? (
+                                    <div className="spinner"></div>
+                                  ) : (<FaThumbsUp
+                                    color={review.liked === 1 ? "blue" : "gray"}/>
+                                  )}
+                                </button>
+                                <p>
+                                  <small>{review.likes_count}</small>
+                                </p>
+                              </div>
+                              <div className="dislike-box">
+                                <button
+                                  className="dislike-button"
+                                  onClick={() => handleLikes("dislike", review)}
+                                >
+                                  {loadingReaction === review.id ? (
+                                    <div className="spinner"></div>
+                                  ) : (<FaThumbsDown
+                                    color={review.disliked === 1 ? "blue" : "gray"}/>
+                                  )}
+                                </button>
+                                <p>
+                                  <small>{review.dislikes_count}</small>
+                                </p>
+                              </div>
+                            </div>
                           </div>
                         ))}
-                      </div>
-                      <div className="reaction-box">
-                        <div className="like-box">
-                          <button
-                            className="like-button"
-                            onClick={() => handleLikes("like", review)}
-                          >
-                            {loadingReaction === review.id ? (
-                              <div className="spinner"></div>
-                            ) : (<FaThumbsUp
-                              color={review.liked === 1 ? "blue" : "gray"}/>
-                            )}
-                          </button>
-                          <p>
-                            <small>{review.likes_count}</small>
-                          </p>
-                        </div>
-                        <div className="dislike-box">
-                          <button
-                            className="dislike-button"
-                            onClick={() => handleLikes("dislike", review)}
-                          >
-                            {loadingReaction === review.id ? (
-                              <div className="spinner"></div>
-                            ) : (<FaThumbsDown
-                              color={review.disliked === 1 ? "blue" : "gray"}/>
-                            )}
-                          </button>
-                          <p>
-                            <small>{review.dislikes_count}</small>
-                          </p>
-                        </div>
                       </div>
                     </div>
                   </>
