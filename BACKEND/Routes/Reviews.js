@@ -82,7 +82,7 @@ router.post("/postReview", authMiddleware, async (req, res) => {
 });
 
 // Endpoint para manejar los likes y dislikes de las reseñas
-router.post("/handleLikes/review", async (req, res) => {
+router.post("/handleLikes/review", authMiddleware, async (req, res) => {
   const { change } = req.body;
   const idUser = req.body.idUser;
   const idReview = req.body.idReview;
@@ -200,6 +200,7 @@ router.post("/handleLikes/review", async (req, res) => {
   }
 });
 
+// Endpoint para subir un comentario de una reseña
 router.post("/postComment", authMiddleware, async (req, res) => {
   const { idPublisher, content, idReview } = req.body;
 

@@ -18,7 +18,7 @@ function Reviews({ subject }) {
   const [showSummary, setShowSummary] = useState(false);
   const [summarizeText, setSummarizeText] = useState("");
   const [shouldScroll, setShouldScroll] = useState(false);
-  const [loadingReaction, setLoadingReaction] = useState(null);
+  const [loadingReaction, setLoadingReaction] = useState({id: null, type: null});
   const inputRef = useRef(null);
   const [replyTo, setReplyTo] = useState(null);
   const [currentReview, setCurrentReview] = useState(null);
@@ -78,7 +78,9 @@ function Reviews({ subject }) {
         await fetchReviews();
         setUserReview("");
         setShouldScroll(true);
-      } else {
+      } else if(response.status === 403) {
+        return alert("Tu sesión expiro. Vuelve a iniciar sesión");
+      }else {
         console.log(data.message);
       }
     } catch (error) {
@@ -101,7 +103,7 @@ function Reviews({ subject }) {
     }
 
     try {
-      setLoadingReaction(review.id);
+      setLoadingReaction({id: review.id, type: x});
 
       const response = await fetch(
         `http://localhost:3000/reviews/handleLikes/review`,
@@ -126,7 +128,7 @@ function Reviews({ subject }) {
     } catch (err) {
       console.error(err);
     } finally {
-      setLoadingReaction(null);
+      setLoadingReaction({id: null, type: null});
     }
   }
 
@@ -261,13 +263,13 @@ function Reviews({ subject }) {
                   <div className="reaction-box">
                     <div className="like-box">
                       <button
-                        className="like-button"
+                        className={`like-button ${review.review_liked === 1 ? "liked" : ""}`}
                         onClick={() => handleLikes("like", review)}
                       >
-                        {loadingReaction === review.id ? (
+                        {loadingReaction.id === review.id && loadingReaction.type === "like"? (
                           <div className="spinner"></div>
                         ) : (<FaThumbsUp
-                          color={review.liked === 1 ? "blue" : "gray"}/>
+                          size={16}/>
                         )}
                       </button>
                       <p>
@@ -276,13 +278,13 @@ function Reviews({ subject }) {
                     </div>
                     <div className="dislike-box">
                       <button
-                        className="dislike-button"
+                        className={`dislike-button ${review.review_disliked === 1 ? "disliked" : ""}`}
                         onClick={() => handleLikes("dislike", review)}
                       >
-                        {loadingReaction === review.id ? (
+                        {loadingReaction.id === review.id && loadingReaction.type === "dislike" ? (
                           <div className="spinner"></div>
                         ) : (<FaThumbsDown
-                          color={review.disliked === 1 ? "blue" : "gray"}/>
+                          size={16}/>
                         )}
                       </button>
                       <p>
@@ -297,11 +299,8 @@ function Reviews({ subject }) {
                           setCurrentReview(review);
                         }}
                       >
-                        {loadingReaction === review.id ? (
-                          <div className="spinner"></div>
-                        ) : (<FaComment
+                        <FaComment
                           color={review.disliked === 1 ? "blue" : "gray"}/>
-                        )}
                       </button>
                       <p>
                         <small>{review.dislikes_count}</small>

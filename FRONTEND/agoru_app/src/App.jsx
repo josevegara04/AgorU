@@ -17,7 +17,6 @@ function App() {
     if (token) {
       setUserEmail(sessionStorage.getItem("email"));
       setView("home");
-      console.log("si")
     }
   }, []);
 
@@ -37,7 +36,7 @@ function App() {
       )}
       {view === "register" && (
         <Register 
-        onSuccess={() => setView("home")} 
+        onSuccess={(x) => setView(x)} 
         setUserEmail={setUserEmail}
         />
       )}

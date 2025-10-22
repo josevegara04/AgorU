@@ -184,3 +184,11 @@
 .semester-subjects li{
     margin-left: 20px;
 }
+.semester-subjects{
+    border-left: 3px solid #196e97;
+    border-radius: 8px;
+}
+.subjects-options{
+    border-left: 3px solid #196e97;
+    border-radius: 8px;
+}
