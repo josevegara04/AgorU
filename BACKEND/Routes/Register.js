@@ -30,11 +30,15 @@ router.post("/", checkUser, async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         const result = await executeQuery("insert into user(email, password) values(?, ?)", [email, hashedPassword]);
+        console.log(result);
 
         // Crea el token
         const token = jwt.sign({ email: email, id: result.insertId }, SECRET_KEY, { expiresIn: "15m" })
 
-        res.status(201).json({token: token, id: result.insertId, message: "user created"});
+        res.status(201).json({
+            token: token, 
+            id: result.insertId, 
+            message: "user created"});
     } catch (err) {
         console.error(err);
         res.status(500).json({message: "error inserting user"});

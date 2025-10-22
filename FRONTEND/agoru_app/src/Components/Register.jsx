@@ -35,10 +35,10 @@ function Register({ onSuccess, setUserEmail }) {
 
       if (response.status === 201) {
         setUserEmail(email);
-        localStorage.setItem("email", email);
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("id", data.id);
-        onSuccess(); 
+        sessionStorage.setItem("email", email);
+        sessionStorage.setItem("token", data.token);
+        sessionStorage.setItem("id", data.id);
+        onSuccess("home"); 
       } else if (response.status === 400) {
         alert(data.message || "El email ya existe");
       } else {
@@ -84,7 +84,11 @@ function Register({ onSuccess, setUserEmail }) {
               }}
             />
           </div>
-          <button className="btn btn-primary login-button" type="submit">Registrar</button>
+          <button 
+            className="btn btn-primary login-button" type="submit"
+          >
+            Registrar
+          </button>
         </form>
       </div>
     </div>
