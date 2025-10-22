@@ -313,7 +313,6 @@ function Reviews({ subject }) {
                   <>
                     <div className="comments-section">
                       <div className="comments-content">
-                        <h4>Comentarios</h4>
                         {review.comments.map((comment, cIndex) => (
                           <div key={cIndex} className="comment-item">
                             <p>{comment.content}</p>

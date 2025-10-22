@@ -1,10 +1,11 @@
 // Componente de materias
 
-import React from "react";
+import React, { useRef } from "react";
 import "../Styles/Subjects.css";
 import { useState } from "react";
 import Reviews from "./Reviews";
 import StudyMaterial from "./StudyMaterial";
+import { FaBars, FaSearch } from "react-icons/fa";
 
 function Subjects({ email }) {
   const subjects = {
@@ -38,6 +39,8 @@ function Subjects({ email }) {
   );
   const [resource, setResource] = useState("studyMaterial");
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSideBarCollapsed, setIsSideBarCollapsed] = useState(false);
+  const inputRef = useRef(null);
 
   function normalizeText(text) {
     return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -51,11 +54,31 @@ function Subjects({ email }) {
 
   return (
     <div className="subjects-container">
-      <div className="subjects-sidebar">
-        <div className="search">
+      <div className={`subjects-sidebar ${isSideBarCollapsed ? 'collapsed' : ''}`}>
+        <button
+          className="toggle-sidebar-button"
+          onClick={() => setIsSideBarCollapsed(!isSideBarCollapsed)}
+        >
+          <FaBars />
+        </button>
+        {isSideBarCollapsed ? (
+          <button 
+            className="search-button"
+            onClick={() => {
+              setIsSideBarCollapsed(false);
+              setTimeout(() => {
+                inputRef.current?.focus();
+              }, 300)
+            }}
+          >
+            <FaSearch />
+          </button>
+        ) : (
+          <div className="search">
           <label htmlFor="">Buscar</label>
           <input
             type="text"
+            ref={inputRef}
             className=""
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -86,9 +109,10 @@ function Subjects({ email }) {
               )}
             </ul>
           )}
-        </div>
+          </div>
+        )}
         <h2> Semestres </h2>
-        <ul>
+        <ul className="semesters-container">
           {Object.keys(subjects).map((semester) => (
             <React.Fragment key={semester}>
               <li
@@ -101,7 +125,7 @@ function Subjects({ email }) {
                 {semester}
               </li>
               {semester === selectedSemester && (
-                <ul>
+                <ul className="semester-subjects">
                   {subjects[semester].map((subject) => (
                     <React.Fragment key={subject.code}>
                       <li
@@ -111,11 +135,17 @@ function Subjects({ email }) {
                         {subject.name}
                       </li>
                       {subject.name === selectedSubject.name && (
-                        <ul>
-                          <li onClick={() => setResource("studyMaterial")}>
+                        <ul className="subjects-options">
+                          <li 
+                            onClick={() => setResource("studyMaterial")}
+                            className={resource==="studyMaterial"? "active" : ""}
+                          >
                             Material de estudio
                           </li>
-                          <li onClick={() => setResource("reviews")}>
+                          <li 
+                            onClick={() => setResource("reviews")}
+                            className={resource==="reviews"? "active" : ""}
+                          >
                             Reseñas
                           </li>
                         </ul>
