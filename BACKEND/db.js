@@ -15,6 +15,7 @@ const dbConfig = {
 export async function openConnection() {
     try {
         const connection = await mysql.createConnection(dbConfig);
+        await connection.query("SET time_zone = 'America/Bogota';");
         return connection;
     } catch(err) {
         console.error("Error executing query: ", err);

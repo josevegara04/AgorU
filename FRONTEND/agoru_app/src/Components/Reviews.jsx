@@ -3,7 +3,7 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import "../Styles/reviews.css";
-import { FaThumbsUp, FaThumbsDown, FaComment } from "react-icons/fa";
+import { FaThumbsUp, FaThumbsDown, FaComment, FaUserCircle } from "react-icons/fa";
 import SummaryBar from "./SummaryBar";
 
 function Reviews({ subject }) {
@@ -22,6 +22,7 @@ function Reviews({ subject }) {
   const inputRef = useRef(null);
   const [replyTo, setReplyTo] = useState(null);
   const [currentReview, setCurrentReview] = useState(null);
+  const activeValue = replyTo ? userComment : userReview;
 
   // Función para mostrar las reviews de una materia
   async function fetchReviews() {
@@ -215,6 +216,27 @@ function Reviews({ subject }) {
     }
   }
 
+  const useTextareaAutoHeight = (ref, value) => {
+  useEffect(() => {
+    // Solo ajusta si el ref está montado
+    if (ref.current) {
+      const textarea = ref.current;
+      
+      // 1. Resetear la altura a 'auto' para que pueda encogerse si se borra texto
+      textarea.style.height = '20px';
+      textarea.style.maxHeight = "200px"
+      
+      // 2. Establecer la altura a la altura de scroll del contenido.
+      // El CSS (min-height/max-height) se encargará de limitar esto.
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
+    
+    // Se ejecuta cada vez que el 'value' cambia (userReview o userComment)
+  }, [ref, value]); 
+};
+
+useTextareaAutoHeight(inputRef, activeValue);
+
   return (
     <div className="content-summary">
       <div className={`subject-content ${showSummary ? "with-summary" : "full"}`}>
@@ -239,10 +261,15 @@ function Reviews({ subject }) {
               <div key={index} className="review-item">
                 <div className="review-container">
                   <div className="review-content">
+                    <div className="user-info">
+                      <FaUserCircle
+                      size={24}
+                      color="#196e97"/>
+                      <p>
+                        <small>{review.review_author_email}</small>
+                      </p>
+                    </div>
                     <p>{review.content}</p>
-                    <p>
-                      <small>Publicado por: {review.review_author_email}</small>
-                    </p>
                     <p>
                       <small>
                         {new Date(review.postDate).toLocaleDateString("es-CO", {
@@ -315,9 +342,17 @@ function Reviews({ subject }) {
                         {review.comments.map((comment, cIndex) => (
                           <div key={cIndex} className="comment-item">
                             <div className="comment-c">
+                              <div className="user-comment-info">
+                                <FaUserCircle 
+                                  size={24}
+                                  color="#196e97"
+                                />
+                                <p>
+                                  <small>{comment.authorEmail}</small>
+                                </p>
+                              </div>
                               <p>{comment.content}</p>
                               <p>
-                                <small>Por: {comment.authorEmail}</small>
                                 <br />
                                 <small>
                                   {new Date(comment.postDate).toLocaleString("es-CO", {
@@ -390,12 +425,12 @@ function Reviews({ subject }) {
             </div>
           )}
           <div className="input-section">
-            <input
+            <textarea
               type="text"
               ref={inputRef}
               placeholder={replyTo ? "Escribe tu comentario" : "Escribe una reseña"}
               className="input-bar"
-              value={replyTo ? userComment : userReview}
+              value={/* replyTo ? userComment : userReview */activeValue}
               onChange={(e) => {
                 if(replyTo) {
                   setUserComment(e.target.value);

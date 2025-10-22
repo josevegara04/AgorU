@@ -71,7 +71,7 @@ router.post("/postReview", authMiddleware, async (req, res) => {
 
   try {
     const result = await executeQuery(
-      "INSERT INTO review(idPublisher, content, postDate, idSubject, likes_count, dislikes_count) values(?, ?, NOW(), ?, 0, 0)",
+      `INSERT INTO review(idPublisher, content, postDate, idSubject, likes_count, dislikes_count) values(?, ?, NOW(), ?, 0, 0);`,
       [idPublisher, content, idSubject]
     );
     return res.status(200).json({ message: "message" });
@@ -206,7 +206,7 @@ router.post("/postComment", authMiddleware, async (req, res) => {
 
   try {
     const result = await executeQuery(
-      "INSERT INTO comment(idPublisher, content, postDate, idReview, likesCount, dislikesCount) values(?, ?, NOW(), ?, 0, 0)",
+      "`INSERT INTO comment(idPublisher, content, postDate, idReview, likesCount, dislikesCount) values(?, ?, NOW(), ?, 0, 0)",
       [idPublisher, content, idReview]
     );
     await executeQuery("UPDATE review SET comments_count = comments_count + 1 WHERE id = ?", [idReview]);
