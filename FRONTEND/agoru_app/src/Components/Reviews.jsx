@@ -89,6 +89,54 @@ function Reviews({ subject }) {
     }
   }
 
+  // Función para manejar los likes y dislikes de los comentarios
+  async function handleComment(x, comment) {
+    if (!id) {
+      return alert("Inicia sesión");
+    }
+
+    let field;
+
+    if (x === "like") {
+      field = "likesCount";
+    } else {
+      field = "dislikesCount";
+    }
+
+    try {
+      setLoadingReaction({id: comment.id, type: x});
+      console.log(loadingReaction)
+
+      const response = await fetch(
+        `http://localhost:3000/reviews/handleComment/review`,
+        {
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            change: field,
+            idComment: comment.id,
+            idUser: id,
+          }),
+        }
+      );
+
+      const data = await response.json();
+      if (response.status === 200) {
+        fetchReviews();
+      }
+      else if(response.status === 403) {
+        return alert("Vuelve a iniciar sesión");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingReaction({id: null, type: null});
+    }
+  }
+
   // Función para manejar los likes y dislikes
   async function handleLikes(x, review) {
     if (!id) {
@@ -249,7 +297,7 @@ useTextareaAutoHeight(inputRef, activeValue);
             className="btn btn-outline-primary summary-button"
             onClick={() => {
               setShowSummary(true);
-              /*  */
+              summarize();
             }}
           >
             Resumir
@@ -368,32 +416,32 @@ useTextareaAutoHeight(inputRef, activeValue);
                             <div className="reaction-comment">
                               <div className="like-box">
                                 <button
-                                  className="like-button"
-                                  onClick={() => handleLikes("like", review)}
+                                  className={`like-button ${comment.liked === 1 ? "liked" : ""}`}
+                                  onClick={() => handleComment("like", comment)}
                                 >
-                                  {loadingReaction === review.id ? (
+                                  {loadingReaction.id === comment.id && loadingReaction.type === "like"? (
                                     <div className="spinner"></div>
                                   ) : (<FaThumbsUp
-                                    color={review.liked === 1 ? "blue" : "gray"}/>
+                                    size={16}/>
                                   )}
                                 </button>
                                 <p>
-                                  <small>{review.likes_count}</small>
+                                  <small>{comment.likesCount}</small>
                                 </p>
                               </div>
                               <div className="dislike-box">
                                 <button
-                                  className="dislike-button"
-                                  onClick={() => handleLikes("dislike", review)}
+                                  className={`dislike-button ${comment.disliked === 1 ? "disliked" : ""}`}
+                                  onClick={() => handleComment("dislike", comment)}
                                 >
-                                  {loadingReaction === review.id ? (
+                                  {loadingReaction.id === comment.id && loadingReaction.type === "dislike"? (
                                     <div className="spinner"></div>
                                   ) : (<FaThumbsDown
-                                    color={review.disliked === 1 ? "blue" : "gray"}/>
+                                    size={16}/>
                                   )}
                                 </button>
                                 <p>
-                                  <small>{review.dislikes_count}</small>
+                                  <small>{comment.dislikesCount}</small>
                                 </p>
                               </div>
                             </div>
