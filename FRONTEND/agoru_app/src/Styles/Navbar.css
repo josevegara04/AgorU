@@ -16,34 +16,82 @@
 }
 .fields{
     display: flex;
-    width: 70%;
-    justify-content: end;
+    align-items: center;
+    gap: 10px;
 }
 
-.fields a {
-    padding-left: 18px;
+.nav-btn{
+    width: auto !important;
+    padding: 8px 16px !important;
+    border: none !important;
+    color: white !important;
+    transition: 0.2s ease-in-out !important;
+    background: none !important;
 }
-
-.fields button{
-    background: none;
-    border: 2px solid transparent;
-    transition: ease-in 0.2s;
-    width: 100px;
-    height: 100px;
-    box-shadow: 0 0 5px transparent;
-    color: white;
-}
-.fields button:hover{
-    border-color: #23495b !important;
+.nav-btn:hover{
+    border-color: #ffffffaa !important;
     background-color: #3b7d9c !important;
-    transform: scale(1.05);
+    transform: scale(1.05) !important;
+    border-color: none !important;
 }
-.fields button:active{
+.nav-btn:active{
     background-color: #3b7d9c !important;
-    transform: scale(0.98);
+    transform: scale(0.98) !important;
+    border-color: none !important;
 }
-.fields button:focus {
+.nav-btn:focus {
   background-color: #3b7d9c;
-  border-color: none;
+  border-color: none !important;
   outline: none; 
+}
+.user-dropdown {
+  background: transparent;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.user-dropdown::after {
+  color: white;
+}
+
+.user-icon {
+  color: white;
+}
+
+.user-email {
+  color: white;
+  font-size: 0.95rem;
+  margin-left: 3px;
+  
+}
+
+/* Menú desplegable */
+.user-menu {
+  min-width: 160px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  border: none;
+  padding: 0.25rem 0;
+}
+
+.user-item {
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+}
+
+.user-item:hover {
+  background-color: #e9f5fb;
+}
+.active-btn {
+  background-color: #3b7d9c !important;
+  border-color: none !important;
+  transform: scale(1.05);
+}
+.dropdown.show .user-dropdown {
+  background-color: #3b7d9c !important;
+  transform: scale(1.05);
 }
