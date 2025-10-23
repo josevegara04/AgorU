@@ -33,7 +33,7 @@ router.post("/", checkUser, async (req, res) => {
         console.log(result);
 
         // Crea el token
-        const token = jwt.sign({ email: email, id: result.insertId }, SECRET_KEY, { expiresIn: "15m" })
+        const token = jwt.sign({ email: email, id: result.insertId }, SECRET_KEY, { expiresIn: "30m" })
 
         res.status(201).json({
             token: token, 
