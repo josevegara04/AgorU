@@ -31,7 +31,7 @@ router.post("/summarizeGEMINI/:subjectId", fetchReviews, async (req, res) => {
       const prompt = `
 Eres un asistente especializado en analizar reseñas académicas.
 Resume las siguientes opiniones de estudiantes sobre la materia "${resultName[0].name}".
-Destaca los aspectos positivos, negativos y la opinión general.
+Destaca los aspectos positivos, negativos y la opinión general de manera que el lector tenga una idea general de lo que dicen los estudiantes sobre la materia. Por favor, no lo haga smuy extenso.
 
 Reseñas:
 ${concatenatedContent}
