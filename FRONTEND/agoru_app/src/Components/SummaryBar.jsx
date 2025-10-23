@@ -15,7 +15,7 @@ function SummaryBar({ onClose, summarizeText}) {
       </button>
       <h1>Resumen</h1>
       <div className="summary-text">
-        <ReactMarkdown>{/* {summarizeText} */}Resumen generado: A continuación, se presenta un resumen del análisis de las opiniones proporcionadas sobre la materia "Cálculo 1":
+        <ReactMarkdown>{/* summarizeText */}Resumen generado: A continuación, se presenta un resumen del análisis de las opiniones proporcionadas sobre la materia "Cálculo 1":
 
 ---
 
