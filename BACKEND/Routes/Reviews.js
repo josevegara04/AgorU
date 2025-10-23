@@ -218,3 +218,121 @@ router.post("/postComment", authMiddleware, async (req, res) => {
 });
 
 export default router;
+
+// Endpoint para manejar los likes y dislikes de los comentarios
+router.post("/handleComment/review", authMiddleware, async (req, res) => {
+  const { change } = req.body;
+  const idUser = req.body.idUser;
+  const idComment = req.body.idComment;
+  let commentUserField = "";
+
+  if (!idUser || !idComment || !change) {
+    return res
+      .status(400)
+      .json({ message: "Faltan datos en el body", body: req.body });
+  }
+
+  if (change === "likesCount") {
+    commentUserField = "liked";
+  } else {
+    commentUserField = "disliked";
+  }
+
+  // Verificar que el usuario no haya reaccinado todavía a la reseña
+  const query = await executeQuery(
+    `SELECT ${commentUserField} FROM user_comment WHERE idUser = ? AND idComment = ?`,
+    [idUser, idComment]
+  );
+
+  if (query.length === 0) {
+    // No ha reaccionado
+    try {
+      // Actualizar el número de likes o dislikes de la reseña
+      const result = await executeQuery(
+        `UPDATE comment SET ${change} = ${change}+1 WHERE id = ?`,
+        [idComment]
+      );
+
+      // Crear un registro en la tabla user_review
+      const update = await executeQuery(
+        `INSERT INTO user_comment(idUser, idComment, ${commentUserField}) values(?, ?, 1)`,
+        [idUser, idComment]
+      );
+      return res.status(200).json({ message: "message" });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "error in database" });
+    }
+  } else {
+    // Ya reaccionó
+    try {
+      const connection = await openConnection();
+      if (commentUserField === "liked") {
+        if (query[0].liked === 1) {
+          await connection.query("START TRANSACTION");
+
+          await connection.query(
+            `DELETE FROM user_comment WHERE idUser = ? AND idComment = ?`,
+            [idUser, idComment]
+          );
+
+          await connection.query(
+            `UPDATE comment SET likesCount = GREATEST(likesCount - 1, 0) WHERE id = ?`,
+            [idComment]
+          );
+
+          await connection.query("COMMIT");
+        } else {
+          await connection.query("START TRANSACTION");
+
+          await connection.query(
+            `UPDATE user_comment SET liked = 1, disliked = 0 WHERE idUser = ? AND idComment = ?`,
+            [idUser, idComment]
+          );
+
+          await connection.query(
+            `UPDATE comment SET likesCount = likesCount + 1, dislikesCount = GREATEST(dislikesCount - 1, 0) WHERE id = ?`,
+            [idComment]
+          );
+
+          await connection.query("COMMIT");
+        }
+      } else {
+        if (query[0].disliked === 1) {
+          await connection.query("START TRANSACTION");
+
+          await connection.query(
+            `DELETE FROM user_comment WHERE idUser = ? AND idComment = ?`,
+            [idUser, idComment]
+          );
+
+          await connection.query(
+            `UPDATE comment SET dislikesCount = GREATEST(dislikesCount - 1, 0) WHERE id = ?`,
+            [idComment]
+          );
+
+          await connection.query("COMMIT");
+        } else {
+          await connection.query("START TRANSACTION");
+
+          await connection.query(
+            `UPDATE user_comment SET liked = 0, disliked = 1 WHERE idUser = ? AND idComment = ?`,
+            [idUser, idComment]
+          );
+
+          await connection.query(
+            `UPDATE comment SET likesCount = GREATEST(likesCount - 1, 0), dislikesCount = dislikesCount + 1 WHERE id = ?`,
+            [idComment]
+          );
+
+          await connection.query("COMMIT");
+        }
+      }
+      await closeConnection(connection);
+      return res.status(200).json({ message: "success" });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "error in database" });
+    }
+  }
+});
