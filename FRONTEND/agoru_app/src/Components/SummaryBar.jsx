@@ -15,7 +15,7 @@ function SummaryBar({ onClose, summarizeText}) {
       </button>
       <h1>Resumen</h1>
       <div className="summary-text">
-        <ReactMarkdown>{/* summarizeText */}Resumen generado: A continuación, se presenta un resumen del análisis de las opiniones proporcionadas sobre la materia "Cálculo 1":
+        <ReactMarkdown>{summarizeText}{/* Resumen generado: A continuación, se presenta un resumen del análisis de las opiniones proporcionadas sobre la materia "Cálculo 1":
 
 ---
 
@@ -39,7 +39,7 @@ Los estudiantes que ofrecieron comentarios explícitos sobre la materia expresar
 
 La opinión general sobre "Cálculo 1", basada en este conjunto limitado de datos, es **abrumadoramente positiva**. Las pocas respuestas son concisas y enfáticas en la calidad y el valor de la asignatura.
 
-**Nota sobre las Respuestas Neutras/Informales:** Varias respuestas ("hola", "que bueno", "gas") sugieren entusiasmo o al menos una actitud favorable, aunque no aportan información específica sobre el contenido académico de la materia.</ReactMarkdown>
+**Nota sobre las Respuestas Neutras/Informales:** Varias respuestas ("hola", "que bueno", "gas") sugieren entusiasmo o al menos una actitud favorable, aunque no aportan información específica sobre el contenido académico de la materia. */}</ReactMarkdown>
       </div>
     </div>
   );
