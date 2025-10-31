@@ -29,7 +29,7 @@ function Reviews({ subject }) {
   async function fetchReviews() {
     try {
       const response = await fetch(
-        `http://${API_URL}/reviews/getReviews/${subject.code}`,
+        `${API_URL}/reviews/getReviews/${subject.code}`,
         {
           method: "POST",
           headers: {
@@ -62,7 +62,7 @@ function Reviews({ subject }) {
       return alert("Inicia sesión para poder publicar una reseña");
     }
     try {
-      const response = await fetch(`http://${API_URL}/reviews/postReview`, {
+      const response = await fetch(`${API_URL}/reviews/postReview`, {
         method: "POST",
         headers: {
           authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -109,7 +109,7 @@ function Reviews({ subject }) {
       console.log(loadingReaction)
 
       const response = await fetch(
-        `http://${API_URL}/reviews/handleComment/review`,
+        `${API_URL}/reviews/handleComment/review`,
         {
           method: "POST",
           headers: {
@@ -156,7 +156,7 @@ function Reviews({ subject }) {
       setLoadingReaction({id: review.id, type: x});
 
       const response = await fetch(
-        `http://${API_URL}/reviews/handleLikes/review`,
+        `${API_URL}/reviews/handleLikes/review`,
         {
           method: "POST",
           headers: {
@@ -185,7 +185,7 @@ function Reviews({ subject }) {
   async function summarize() {
     try {
       const response = await fetch(
-        `http://${API_URL}/openAIService/summarizeGEMINI/${subject.code}`,
+        `${API_URL}/openAIService/summarizeGEMINI/${subject.code}`,
         {
           method: "POST",
           headers: {
@@ -240,7 +240,7 @@ function Reviews({ subject }) {
       return alert("Inicia sesión para poder publicar una reseña");
     }
     try {
-      const response = await fetch(`http://localhost:3000/reviews/postComment`, {
+      const response = await fetch(`${API_URL}/reviews/postComment`, {
         method: "POST",
         headers: {
           authorization: `Bearer ${sessionStorage.getItem("token")}`,
