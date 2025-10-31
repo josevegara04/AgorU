@@ -7,6 +7,7 @@ import { FaThumbsUp, FaThumbsDown, FaComment, FaUserCircle } from "react-icons/f
 import SummaryBar from "./SummaryBar";
 
 function Reviews({ subject }) {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [reviews, setReviews] = useState([]);
   const email = sessionStorage.getItem("email");
   const id = sessionStorage.getItem("id");
@@ -28,7 +29,7 @@ function Reviews({ subject }) {
   async function fetchReviews() {
     try {
       const response = await fetch(
-        `http://localhost:3000/reviews/getReviews/${subject.code}`,
+        `http://${API_URL}/reviews/getReviews/${subject.code}`,
         {
           method: "POST",
           headers: {
@@ -61,7 +62,7 @@ function Reviews({ subject }) {
       return alert("Inicia sesión para poder publicar una reseña");
     }
     try {
-      const response = await fetch(`http://localhost:3000/reviews/postReview`, {
+      const response = await fetch(`http://${API_URL}/reviews/postReview`, {
         method: "POST",
         headers: {
           authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -108,7 +109,7 @@ function Reviews({ subject }) {
       console.log(loadingReaction)
 
       const response = await fetch(
-        `http://localhost:3000/reviews/handleComment/review`,
+        `http://${API_URL}/reviews/handleComment/review`,
         {
           method: "POST",
           headers: {
@@ -155,7 +156,7 @@ function Reviews({ subject }) {
       setLoadingReaction({id: review.id, type: x});
 
       const response = await fetch(
-        `http://localhost:3000/reviews/handleLikes/review`,
+        `http://${API_URL}/reviews/handleLikes/review`,
         {
           method: "POST",
           headers: {
@@ -184,7 +185,7 @@ function Reviews({ subject }) {
   async function summarize() {
     try {
       const response = await fetch(
-        `http://localhost:3000/openAIService/summarizeGEMINI/${subject.code}`,
+        `http://${API_URL}/openAIService/summarizeGEMINI/${subject.code}`,
         {
           method: "POST",
           headers: {

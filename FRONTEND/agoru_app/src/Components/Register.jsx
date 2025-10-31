@@ -8,6 +8,7 @@ function Register({ onSuccess, setUserEmail }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [checkPass, setCheckPass] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // Función que verifica si la contraseña se ha escrito bien
   function checkPassword(password, checkPass) {
@@ -25,7 +26,7 @@ function Register({ onSuccess, setUserEmail }) {
     }
     
     try {
-      const response = await fetch("http://localhost:3000/register", {
+      const response = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

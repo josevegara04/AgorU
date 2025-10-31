@@ -8,11 +8,12 @@ import Register from "./Register"
 function Login({ onSuccess, setUserEmail }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // Función que hace el login
   async function login() {
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
