@@ -37,8 +37,8 @@ export default function Navbar({ onButtonClick, email }) {
             </button>
           </>
         ) : (
-          <div class="dropdown">
-            <button class="btn dropdown-toggle user-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <div className="dropdown">
+            <button className="btn dropdown-toggle user-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               {
                 <>
                 <FaUserCircle 
@@ -49,7 +49,7 @@ export default function Navbar({ onButtonClick, email }) {
                 </>  
               }
             </button>
-            <ul class="dropdown-menu dropdown-menu-end user-menu">
+            <ul className="dropdown-menu dropdown-menu-end user-menu">
               <li><a className="dropdown-item user-item" href="#">Perfil</a></li>
               <li><button 
               className="dropdown-item user-item text-danger"
